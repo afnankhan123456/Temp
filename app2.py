@@ -87,9 +87,8 @@ if not st.session_state.otp_verified:
 
 # --- UI ---
 
-IMAGE_PATH = r"C:\Users\AFNANKHAN\Desktop\Game\images\1st logo.jpg"
-with open(IMAGE_PATH, "rb") as img_file:
-    img_base64 = base64.b64encode(img_file.read()).decode()
+image_url = "https://raw.githubusercontent.com/afnankhan123456/stremlit--game/main/1st%20logo.jpg"
+st.image(image_url, caption="Your Image Caption")
 
 st.markdown(f"""
     <div style='display: flex; align-items: center; justify-content: center; margin-bottom: 20px;'>
@@ -166,8 +165,8 @@ with st.container():
 
 if st.session_state.otp_verified:
     IMAGE_PATH2 = r"C:\Users\AFNANKHAN\Desktop\Game\images\2nd background.jpg"
-    with open(IMAGE_PATH2, "rb") as img_file:
-        next_img_base64 = base64.b64encode(img_file.read()).decode()
+with open(IMAGE_PATH2, "rb") as img_file:
+    next_img_base64 = base64.b64encode(img_file.read()).decode()
 
     st.markdown(
         f"""
@@ -330,4 +329,5 @@ if st.session_state.get("otp_verified", False):
             st.success(f"Answer: {result['answer']}")
             st.info(f"Correct Guesses: {result['correct']}")
             st.success(f"Reward Earned: ₹{result['reward']}")
+
 
