@@ -10,7 +10,8 @@ from email.mime.multipart import MIMEMultipart
 
 # --- CONFIG ---
 FILENAME = "player_data.json"
-IMAGE_PATH = r"C:\Users\AFNANKHAN\Desktop\Game\images\main_backgrund.jpg"
+IMAGE_URL = "https://raw.githubusercontent.com/afnankhan123456/stremlit--game/main/images/main_backgrund.jpg"
+st.image(IMAGE_URL)
 SENDER_EMAIL = "afnank6789@gmail.com"
 APP_PASSWORD = "uiqb avim axhz knzu" 
 
@@ -329,3 +330,4 @@ if st.session_state.get("otp_verified", False):
             st.success(f"Answer: {result['answer']}")
             st.info(f"Correct Guesses: {result['correct']}")
             st.success(f"Reward Earned: ₹{result['reward']}")
+
