@@ -90,10 +90,20 @@ if not st.session_state.otp_verified:
         unsafe_allow_html=True
     )
 
+# --- FUNCTIONS ---
+def get_base64_image(url):
+    """Fetch image from URL and return as base64."""
+    response = requests.get(url)
+    return base64.b64encode(response.content).decode()
+
 # --- UI ---
 
+# Logo image (direct show)
 image_url = "https://raw.githubusercontent.com/afnankhan123456/stremlit--game/main/1st%20logo.jpg"
 st.image(image_url, caption="Your Image Caption")
+
+# Logo image as base64 for inline HTML
+img_base64 = get_base64_image(image_url)
 
 st.markdown(f"""
     <div style='display: flex; align-items: center; justify-content: center; margin-bottom: 20px;'>
@@ -103,9 +113,8 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
 # Reward image
-REWARD_IMAGE_PATH = r"C:\Users\AFNANKHAN\Desktop\Game\images\2nd logo.jpg"
-with open(REWARD_IMAGE_PATH, "rb") as img_file:
-    reward_img_base64 = base64.b64encode(img_file.read()).decode()
+REWARD_IMAGE_URL = "https://raw.githubusercontent.com/afnankhan123456/stremlit--game/main/images/2nd%20logo.jpg"
+reward_img_base64 = get_base64_image(REWARD_IMAGE_URL)
 
 st.markdown(f"""
     <div style="background-color: green; padding: 15px; border-radius: 12px; border: 2px solid #ddd;
@@ -123,7 +132,6 @@ st.markdown(f"""
 # --- MAIN INTERFACE ---
 
 with st.container():
-
     # Step 1: Name input
     if not st.session_state.get("name_submitted", False):
         with st.form("name_form"):
@@ -167,11 +175,9 @@ with st.container():
                     st.error("❌ Incorrect OTP. Try again.")
 
 # --- Step 4: Full background update after OTP verified ---
-
 if st.session_state.otp_verified:
-    IMAGE_PATH2 = r"C:\Users\AFNANKHAN\Desktop\Game\images\2nd background.jpg"
-with open(IMAGE_PATH2, "rb") as img_file:
-    next_img_base64 = base64.b64encode(img_file.read()).decode()
+    IMAGE_URL2 = "https://raw.githubusercontent.com/afnankhan123456/stremlit--game/main/images/2nd%20background.jpg"
+    next_img_base64 = get_base64_image(IMAGE_URL2)
 
     st.markdown(
         f"""
@@ -189,35 +195,34 @@ with open(IMAGE_PATH2, "rb") as img_file:
 
     st.markdown("<h2 style='color:white; text-align:center; margin-top: 200px;'>", unsafe_allow_html=True)
 
+# --- File path where login data is stored ---
+file_path = "/tmp/login_data.json"  # Temporary storage for deployment
 
-# Data file path जहां login data store होता है
-file_path = r"C:\Users\AFNANKHAN\Desktop\Game\login_data.json"
-
-# Check if file already exists
+# Load existing data if file exists
 if os.path.exists(file_path):
     with open(file_path, "r") as f:
         login_data = json.load(f)
 else:
     login_data = {}
 
-# ये block सिर्फ तब चलेगा जब OTP verify हो चुका हो
+# This block runs only after OTP verification
 if st.session_state.get("otp_verified", False):
     email = st.session_state.user_email
 
-    # Login count बढ़ाओ
+    # Increase login count
     login_data[email] = login_data.get(email, 0) + 1
 
-    # Save login count to file
+    # Save updated login count
     with open(file_path, "w") as f:
         json.dump(login_data, f)
 
-    # --- Step 3: Users data memory में रखो ---
+    # --- Store users data in memory ---
     if "users" not in st.session_state:
         st.session_state.users = {}
 
     users = st.session_state.users
 
-    # --- Step 4: Game Logic Functions ---
+    # --- Game Logic Functions ---
     def get_winning_rounds(base=0):
         return [base + i for i in [4, 9, 15, 20]]
 
@@ -262,11 +267,10 @@ if st.session_state.get("otp_verified", False):
             reward = user_bet * 2
             st.success("🎉 All 3 guesses are correct! You win double the bet!")
 
-            # Balloon + Explosion
+            # Balloons + Explosion
             st.balloons()
             explosion_html = """
             <div class="explosion"></div>
-
             <style>
             .explosion {
               position: relative;
@@ -274,7 +278,6 @@ if st.session_state.get("otp_verified", False):
               height: 100px;
               margin: 50px auto;
             }
-
             .explosion::before {
               content: '';
               position: absolute;
@@ -289,7 +292,6 @@ if st.session_state.get("otp_verified", False):
               top: -50px;
               z-index: 999;
             }
-
             @keyframes boom {
               to {
                 transform: scale(2);
@@ -315,8 +317,8 @@ if st.session_state.get("otp_verified", False):
 
         return result
 
-    # --- Step 5: UI Inputs ---
-    st.header(" Play the Game")
+    # --- UI Inputs ---
+    st.header("🎮 Play the Game")
 
     bet = st.number_input("Enter Bet Amount", min_value=1)
     if bet:
@@ -334,8 +336,3 @@ if st.session_state.get("otp_verified", False):
             st.success(f"Answer: {result['answer']}")
             st.info(f"Correct Guesses: {result['correct']}")
             st.success(f"Reward Earned: ₹{result['reward']}")
-
-
-
-
-
