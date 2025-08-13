@@ -259,13 +259,14 @@ if st.session_state.get("otp_verified", False):
         correct = count_correct(user_guess, system_answer)
 
         # Reward calculation
-        if correct == 1:
-            reward = round(user_bet * 0.025, 2)
-        elif correct == 2:
-            reward = round(user_bet * 0.50, 2)
-        elif correct == 3:
-            reward = user_bet * 2
-            st.success("🎉 All 3 guesses are correct! You win double the bet!")
+if correct == 1:
+    reward = round(user_bet * 0.25, 2)  # 1/4 bet
+elif correct == 2:
+    reward = round(user_bet * 0.50, 2)  # half bet
+elif correct == 3:
+    reward = round(user_bet * 2, 2)     # double bet
+    st.success("🎉 All 3 guesses are correct! You win double the bet!")
+
 
             # Balloons + Explosion
             st.balloons()
@@ -336,4 +337,5 @@ if st.session_state.get("otp_verified", False):
             st.success(f"Answer: {result['answer']}")
             st.info(f"Correct Guesses: {result['correct']}")
             st.success(f"Reward Earned: ₹{result['reward']}")
+
 
