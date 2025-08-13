@@ -321,24 +321,27 @@ if st.session_state.get("otp_verified", False):
     # --- UI Inputs ---
     st.header("🎮 Play the Game")
     
-    # Session state default
-if "next_clicked" not in st.session_state:
-    st.session_state.next_clicked = False
-
-# Step 1: Bet Amount
-if not st.session_state.next_clicked:
-    bet = st.number_input("Enter Bet Amount", min_value=1, key="bet_amount")
+   # Page 1: Show only first image and next button
+if not st.session_state.get("show_bet", False) and not st.session_state.get("show_guess", False):
+    st.image("first_image.jpg")
     if st.button("Next ➡️"):
-        st.session_state.bet = bet  # Save bet amount
-        st.session_state.next_clicked = True
-        st.rerun()
+        st.session_state.show_bet = True
+        st.experimental_rerun()
 
-# Step 2: Guess Options
-if st.session_state.next_clicked:
-    guess1 = st.selectbox("Select 1st Number", [1, 2, 3], key="g1")
-    guess2 = st.selectbox("Select 2nd Number", [1, 2, 3], key="g2")
-    guess3 = st.selectbox("Select 3rd Number", [1, 2, 3], key="g3")
+# Page 2: Show bet box first
+elif st.session_state.get("show_bet", False) and not st.session_state.get("show_guess", False):
+    st.image("second_image.jpg")
+    bet = st.number_input("Enter Bet Amount", min_value=1)
+    if st.button("Next ➡️"):
+        st.session_state.bet_amount = bet
+        st.session_state.show_guess = True
+        st.experimental_rerun()
 
-    if st.button("Submit Guess"):
-        st.write(f"Your Bet: {st.session_state.bet}")
-        st.write(f"Your Guess: {guess1}, {guess2}, {guess3}")
+# After bet is entered: Show guess options only
+elif st.session_state.get("show_guess", False):
+    st.write(f"Your bet: {st.session_state.bet_amount}")
+    guess1 = st.selectbox("Select 1st Number", [1, 2, 3])
+    guess2 = st.selectbox("Select 2nd Number", [1, 2, 3])
+    guess3 = st.selectbox("Select 3rd Number", [1, 2, 3])
+
+
