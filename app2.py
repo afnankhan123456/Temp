@@ -98,11 +98,10 @@ def get_base64_image(url):
 
 # --- UI ---
 
-# Logo image (direct show)
+# Logo image URL
 image_url = "https://raw.githubusercontent.com/afnankhan123456/stremlit--game/main/1st%20logo.jpg"
-st.image(image_url, caption="Your Image Caption")
 
-# Logo image as base64 for inline HTML
+# Chhota logo as base64 for inline HTML
 img_base64 = get_base64_image(image_url)
 
 st.markdown(f"""
@@ -128,6 +127,7 @@ st.markdown(f"""
         </div>
     </div>
 """, unsafe_allow_html=True)
+
 
 # --- MAIN INTERFACE ---
 
@@ -337,5 +337,6 @@ if st.session_state.get("otp_verified", False):
             st.success(f"Answer: {result['answer']}")
             st.info(f"Correct Guesses: {result['correct']}")
             st.success(f"Reward Earned: ₹{result['reward']}")
+
 
 
