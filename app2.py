@@ -320,28 +320,22 @@ if st.session_state.get("otp_verified", False):
 
     # --- UI Inputs ---
     st.header("🎮 Play the Game")
-    
-   # Page 1: Show only first image and next button
-if not st.session_state.get("show_bet", False) and not st.session_state.get("show_guess", False):
-    st.image("first_image.jpg")
-    if st.button("Next ➡️"):
-        st.session_state.show_bet = True
-        st.experimental_rerun()
 
-# Page 2: Show bet box first
-elif st.session_state.get("show_bet", False) and not st.session_state.get("show_guess", False):
-    st.image("second_image.jpg")
     bet = st.number_input("Enter Bet Amount", min_value=1)
-    if st.button("Next ➡️"):
-        st.session_state.bet_amount = bet
-        st.session_state.show_guess = True
-        st.experimental_rerun()
+    if bet:
+        if st.button("Next ➡️"):
+            st.session_state.next_clicked = True
 
-# After bet is entered: Show guess options only
-elif st.session_state.get("show_guess", False):
-    st.write(f"Your bet: {st.session_state.bet_amount}")
-    guess1 = st.selectbox("Select 1st Number", [1, 2, 3])
-    guess2 = st.selectbox("Select 2nd Number", [1, 2, 3])
-    guess3 = st.selectbox("Select 3rd Number", [1, 2, 3])
+        guess1 = st.radio("🎯 Select 1st Number", [1, 2, 3], key="g1", horizontal=True)
+        guess2 = st.radio("🎯 Select 2nd Number", [1, 2, 3], key="g2", horizontal=True)
+        guess3 = st.radio("🎯 Select 3rd Number", [1, 2, 3], key="g3", horizontal=True)
+
+        if st.button("Submit Guess"):
+            user_guess = [guess1, guess2, guess3]
+            result = play_game(email, user_guess, bet)
+
+            st.success(f"Answer: {result['answer']}")
+            st.info(f"Correct Guesses: {result['correct']}")
+            st.success(f"Reward Earned: ₹{result['reward']}")
 
 
