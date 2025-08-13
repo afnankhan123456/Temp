@@ -324,10 +324,10 @@ if st.session_state.get("otp_verified", False):
     # --- UI Inputs ---
     st.header("🎮 Play the Game")
 
-    bet = st.number_input("Enter Bet Amount", min_value=1)
-    if bet:
-        if st.button("Next ➡️"):
-            st.session_state.next_clicked = True
+    # bet = st.number_input("Enter Bet Amount", min_value=1)
+    # if bet:
+    #     if st.button("Next ➡️"):
+    #         st.session_state.next_clicked = True
 
         guess1 = st.radio("🎯 Select 1st Number", [1, 2, 3], key="g1", horizontal=True)
         guess2 = st.radio("🎯 Select 2nd Number", [1, 2, 3], key="g2", horizontal=True)
@@ -340,6 +340,7 @@ if st.session_state.get("otp_verified", False):
             st.success(f"Answer: {result['answer']}")
             st.info(f"Correct Guesses: {result['correct']}")
             st.success(f"Reward Earned: ₹{result['reward']}")
+
 
 
 
