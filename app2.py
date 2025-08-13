@@ -11,19 +11,23 @@ from email.mime.multipart import MIMEMultipart
 
 # --- CONFIG ---
 FILENAME = "player_data.json"
-IMAGE_URL = "https://raw.githubusercontent.com/afnankhan123456/stremlit--game/main/images/main_backgrund.jpg"
-st.image(IMAGE_URL)
+IMAGE_URL_MAIN = "https://raw.githubusercontent.com/afnankhan123456/stremlit--game/main/images/main_backgrund.jpg"
+IMAGE_URL_BG = "https://raw.githubusercontent.com/afnankhan123456/stremlit--game/main/2nd%20background.jpg"
 SENDER_EMAIL = "afnank6789@gmail.com"
-APP_PASSWORD = "uiqb avim axhz knzu" 
+APP_PASSWORD = "uiqb avim axhz knzu"
+
+# Show main image
+st.image(IMAGE_URL_MAIN)
 
 # --- FUNCTIONS ---
-
-def get_base64_image_from_url(url):
-    response = requests.get(url)
-    return base64.b64encode(response.content).decode()
-
-IMAGE_URL = "https://raw.githubusercontent.com/afnankhan123456/stremlit--game/main/2nd%20background.jpg"
-base64_image = get_base64_image_from_url(IMAGE_URL)
+def get_base64_image(image_source):
+    """Convert local file or URL to base64 string."""
+    if image_source.startswith("http://") or image_source.startswith("https://"):
+        response = requests.get(image_source)
+        return base64.b64encode(response.content).decode()
+    else:
+        with open(image_source, "rb") as f:
+            return base64.b64encode(f.read()).decode()
 
 def is_valid_name(name):
     return re.match("^[A-Za-z]+$", name) is not None
@@ -58,7 +62,6 @@ def send_otp_email(to_email, otp):
         return False
 
 # --- INITIAL STATES ---
-
 for key in ["name_submitted", "email_submitted", "otp_verified"]:
     if key not in st.session_state:
         st.session_state[key] = False
@@ -71,10 +74,8 @@ if "sent_otp" not in st.session_state:
     st.session_state.sent_otp = ""
 
 # --- BACKGROUND SETUP BEFORE OTP ---
-
 if not st.session_state.otp_verified:
-    base64_image = get_base64_image(IMAGE_URL)
-
+    base64_image = get_base64_image(IMAGE_URL_BG)
     st.markdown(
         f"""
         <style>
@@ -333,6 +334,7 @@ if st.session_state.get("otp_verified", False):
             st.success(f"Answer: {result['answer']}")
             st.info(f"Correct Guesses: {result['correct']}")
             st.success(f"Reward Earned: ₹{result['reward']}")
+
 
 
 
