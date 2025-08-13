@@ -1,5 +1,6 @@
 import streamlit as st
 import random
+import requests
 import json
 import os
 import re
@@ -17,9 +18,12 @@ APP_PASSWORD = "uiqb avim axhz knzu"
 
 # --- FUNCTIONS ---
 
-def get_base64_image(image_path):
-    with open(image_path, "rb") as f:
-        return base64.b64encode(f.read()).decode()
+def get_base64_image_from_url(url):
+    response = requests.get(url)
+    return base64.b64encode(response.content).decode()
+
+IMAGE_URL = "https://raw.githubusercontent.com/afnankhan123456/stremlit--game/main/2nd%20background.jpg"
+base64_image = get_base64_image_from_url(IMAGE_URL)
 
 def is_valid_name(name):
     return re.match("^[A-Za-z]+$", name) is not None
@@ -329,6 +333,7 @@ if st.session_state.get("otp_verified", False):
             st.success(f"Answer: {result['answer']}")
             st.info(f"Correct Guesses: {result['correct']}")
             st.success(f"Reward Earned: ₹{result['reward']}")
+
 
 
 
