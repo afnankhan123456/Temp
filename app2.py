@@ -236,27 +236,32 @@ if st.session_state.get("otp_verified", False):
         prev_bets = [g['amount'] for g in users[email]['games'] if g['round'] < upto_round]
         return min(prev_bets) if prev_bets else 0
 
+
     def play_game(email, user_guess, user_bet):
         if email not in users:
             users[email] = {"games": []}
 
         round_no = len(users[email]['games']) + 1
         total_games = len(users[email]['games'])
-
+        
         base = (total_games // 20) * 20
         winning_rounds = get_winning_rounds(base)
 
+
+        # Adjust bet for winning rounds
         if round_no in winning_rounds:
             min_bet = get_min_bet(email, round_no)
             user_bet = min_bet
 
-        # Random answer generate
+        # Generate system answer
         if round_no in winning_rounds:
+        # All 3 guesses correct
             system_answer = user_guess.copy()
         else:
             while True:
                 system_answer = random.sample([1, 2, 3], 3)
-                if count_correct(user_guess, system_answer) < 3:
+                correct = count_correct(user_guess, system_answer)
+                if correct in [1, 2]:
                     break
 
         correct = count_correct(user_guess, system_answer)
@@ -340,6 +345,7 @@ if st.session_state.get("otp_verified", False):
             st.success(f"Answer: {result['answer']}")
             st.info(f"Correct Guesses: {result['correct']}")
             st.success(f"Reward Earned: ₹{result['reward']}")
+
 
 
 
