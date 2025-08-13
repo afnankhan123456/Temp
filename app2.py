@@ -131,7 +131,6 @@ st.markdown(f"""
 
 
 # --- MAIN INTERFACE ---
-
 with st.container():
     # Step 1: Name input
     if not st.session_state.get("name_submitted", False):
@@ -148,33 +147,34 @@ with st.container():
                     st.success(f"✅ Hello {name}, now enter your Gmail.")                 
 
     # Step 2: Email
-elif not st.session_state.email_submitted:
-    with st.form("email_form"):
-        email = st.text_input("📧 Enter your Gmail:")
-        email_submit = st.form_submit_button("Send OTP")
-        if email_submit:
-            if not is_valid_email(email):
-                st.error("❌ Please enter a valid Gmail address.")
-            else:
-                otp = str(random.randint(100000, 999999))
-                if send_otp_email(email, otp):
-                    st.session_state.sent_otp = otp
-                    st.session_state.user_email = email
-                    st.session_state.email_submitted = True
-                    st.success("📩 OTP sent to your email.")
+    elif not st.session_state.get("email_submitted", False):
+        with st.form("email_form"):
+            email = st.text_input("📧 Enter your Gmail:")
+            email_submit = st.form_submit_button("Send OTP")
+            if email_submit:
+                if not is_valid_email(email):
+                    st.error("❌ Please enter a valid Gmail address.")
+                else:
+                    otp = str(random.randint(100000, 999999))
+                    if send_otp_email(email, otp):
+                        st.session_state.sent_otp = otp
+                        st.session_state.user_email = email
+                        st.session_state.email_submitted = True
+                        st.success("📩 OTP sent to your email.")
 
-# Step 3: OTP
-elif not st.session_state.otp_verified:
-    with st.form("otp_form"):
-        user_otp = st.text_input("🔐 Enter the OTP sent to your email:")
-        otp_submit = st.form_submit_button("Verify OTP")
+    # Step 3: OTP
+    elif not st.session_state.get("otp_verified", False):
+        with st.form("otp_form"):
+            user_otp = st.text_input("🔐 Enter the OTP sent to your email:")
+            otp_submit = st.form_submit_button("Verify OTP")
 
-        if otp_submit:
-            if user_otp == st.session_state.sent_otp:
-                st.session_state.otp_verified = True
-                st.success("✅ OTP Verified! Now you can play.")
-            else:
-                st.error("❌ Incorrect OTP. Try again.")
+            if otp_submit:
+                if user_otp == st.session_state.sent_otp:
+                    st.session_state.otp_verified = True
+                    st.success("✅ OTP Verified! Now you can play.")
+                else:
+                    st.error("❌ Incorrect OTP. Try again.")
+
 
 
 
@@ -342,6 +342,7 @@ if st.session_state.get("otp_verified", False):
             st.success(f"Answer: {result['answer']}")
             st.info(f"Correct Guesses: {result['correct']}")
             st.success(f"Reward Earned: ₹{result['reward']}")
+
 
 
 
