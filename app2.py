@@ -324,7 +324,7 @@ if st.session_state.get("otp_verified", False):
     # --- UI Inputs ---
     st.header("🎮 Play the Game")
 
-    # bet = st.number_input("Enter Bet Amount", min_value=1)
+    bet = st.number_input("Enter Bet Amount", min_value=1)
     # if bet:
     #     if st.button("Next ➡️"):
     #         st.session_state.next_clicked = True
@@ -340,6 +340,7 @@ if st.session_state.get("otp_verified", False):
             st.success(f"Answer: {result['answer']}")
             st.info(f"Correct Guesses: {result['correct']}")
             st.success(f"Reward Earned: ₹{result['reward']}")
+
 
 
 
