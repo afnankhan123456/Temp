@@ -173,8 +173,8 @@ with st.container():
                     st.session_state.otp_verified = True
                     st.success("✅ OTP Verified! Now you can play.")
                     st.rerun()  # Force page reload only once after verification
-               else:
-                   st.error("❌ Incorrect OTP. Try again.")
+                else:
+                    st.error("❌ Incorrect OTP. Try again.")
 
 
 # --- Step 4: Full background update after OTP verified ---
@@ -340,6 +340,7 @@ if st.session_state.get("otp_verified", False):
             st.success(f"Answer: {result['answer']}")
             st.info(f"Correct Guesses: {result['correct']}")
             st.success(f"Reward Earned: ₹{result['reward']}")
+
 
 
 
