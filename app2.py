@@ -164,16 +164,16 @@ with st.container():
                         st.success("📩 OTP sent to your email.")
 
     # Step 3: OTP
-    elif not st.session_state.otp_verified:
-        with st.form("otp_form"):
-            user_otp = st.text_input("🔐 Enter the OTP sent to your email:")
-            otp_submit = st.form_submit_button("Verify OTP")
-            if otp_submit:
-                if user_otp == st.session_state.sent_otp:
-                    st.session_state.otp_verified = True
-                    st.success("✅ OTP Verified! Now you can play.")
-                else:
-                    st.error("❌ Incorrect OTP. Try again.")
+elif not st.session_state.otp_verified:
+    user_otp = st.text_input("🔐 Enter the OTP sent to your email:")
+
+    if st.button("Verify OTP"):
+        if user_otp == st.session_state.sent_otp:
+            st.session_state.otp_verified = True
+            st.success("✅ OTP Verified! Now you can play.")
+        else:
+            st.error("❌ Incorrect OTP. Try again.")
+
 
 # --- Step 4: Full background update after OTP verified ---
 if st.session_state.otp_verified:
@@ -338,6 +338,7 @@ if st.session_state.get("otp_verified", False):
             st.success(f"Answer: {result['answer']}")
             st.info(f"Correct Guesses: {result['correct']}")
             st.success(f"Reward Earned: ₹{result['reward']}")
+
 
 
 
