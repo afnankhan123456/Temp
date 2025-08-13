@@ -69,7 +69,7 @@ if "sent_otp" not in st.session_state:
 # --- BACKGROUND SETUP BEFORE OTP ---
 
 if not st.session_state.otp_verified:
-    base64_image = get_base64_image(IMAGE_PATH)
+    base64_image = get_base64_image(IMAGE_URL)
 
     st.markdown(
         f"""
@@ -329,5 +329,6 @@ if st.session_state.get("otp_verified", False):
             st.success(f"Answer: {result['answer']}")
             st.info(f"Correct Guesses: {result['correct']}")
             st.success(f"Reward Earned: ₹{result['reward']}")
+
 
 
