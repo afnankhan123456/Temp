@@ -176,7 +176,7 @@ with st.container():
 
 # --- Step 4: Full background update after OTP verified ---
 if st.session_state.otp_verified:
-    IMAGE_URL2 = "https://raw.githubusercontent.com/afnankhan123456/stremlit--game/main/images/2nd%20background.jpg"
+    IMAGE_URL2 = "https://raw.githubusercontent.com/afnankhan123456/stremlit--game/main/2nd%20background.jpg"
     next_img_base64 = get_base64_image(IMAGE_URL2)
 
     st.markdown(
@@ -336,3 +336,4 @@ if st.session_state.get("otp_verified", False):
             st.success(f"Answer: {result['answer']}")
             st.info(f"Correct Guesses: {result['correct']}")
             st.success(f"Reward Earned: ₹{result['reward']}")
+
