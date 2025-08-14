@@ -15,8 +15,8 @@ IMAGE_URL_BG = "https://raw.githubusercontent.com/afnankhan123456/stremlit--game
 SENDER_EMAIL = "afnank6789@gmail.com"
 APP_PASSWORD = "uiqb avim axhz knzu"
 
-# Show main image
-st.image(IMAGE_URL_MAIN)
+# # Show main image
+# st.image(IMAGE_URL_MAIN)
 
 # --- FUNCTIONS ---
 def get_base64_image(image_source):
@@ -340,6 +340,7 @@ if st.session_state.get("otp_verified", False):
 #         st.success(f"Answer: {result['answer']}")
 #         st.info(f"Correct Guesses: {result['correct']}")
 #         st.success(f"Reward Earned: ₹{result['reward']}")
+
 
 
 
