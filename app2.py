@@ -11,12 +11,13 @@ from email.mime.multipart import MIMEMultipart
 
 # --- CONFIG ---
 FILENAME = "player_data.json"
+IMAGE_URL_MAIN = "https://raw.githubusercontent.com/afnankhan123456/stremlit--game/main/images/main_backgrund.jpg"
 IMAGE_URL_BG = "https://raw.githubusercontent.com/afnankhan123456/stremlit--game/main/2nd%20background.jpg"
 SENDER_EMAIL = "afnank6789@gmail.com"
 APP_PASSWORD = "uiqb avim axhz knzu"
 
-# # Show main image
-# st.image(IMAGE_URL_MAIN)
+# Show main image
+st.image(IMAGE_URL_MAIN)
 
 # --- FUNCTIONS ---
 def get_base64_image(image_source):
@@ -320,34 +321,22 @@ if st.session_state.get("otp_verified", False):
 
         return result
 
-#     # Force clear full session state at start
-# for key in list(st.session_state.keys()):
-#     del st.session_state[key]
+    # --- UI Inputs ---
+    st.header("🎮 Play the Game")
 
-# # --- UI Inputs ---
-# st.header("🎮 Play the Game")
+    bet = st.number_input("Enter Bet Amount", min_value=1)
+    if bet:
+        if st.button("Next ➡️"):
+            st.session_state.next_clicked = True
 
-# bet = st.number_input("Enter Bet Amount", min_value=1)
-# if bet:
-#     guess1 = st.radio("🎯 Select 1st Number", [1, 2, 3], key="g1", horizontal=True)
-#     guess2 = st.radio("🎯 Select 2nd Number", [1, 2, 3], key="g2", horizontal=True)
-#     guess3 = st.radio("🎯 Select 3rd Number", [1, 2, 3], key="g3", horizontal=True)
+        guess1 = st.radio("🎯 Select 1st Number", [1, 2, 3], key="g1", horizontal=True)
+        guess2 = st.radio("🎯 Select 2nd Number", [1, 2, 3], key="g2", horizontal=True)
+        guess3 = st.radio("🎯 Select 3rd Number", [1, 2, 3], key="g3", horizontal=True)
 
-#     if st.button("Submit Guess"):
-#         user_guess = [guess1, guess2, guess3]
-#         result = play_game(email, user_guess, bet)
+        if st.button("Submit Guess"):
+            user_guess = [guess1, guess2, guess3]
+            result = play_game(email, user_guess, bet)
 
-#         st.success(f"Answer: {result['answer']}")
-#         st.info(f"Correct Guesses: {result['correct']}")
-#         st.success(f"Reward Earned: ₹{result['reward']}")
-
-
-
-
-
-
-
-
-
-
-
+            st.success(f"Answer: {result['answer']}")
+            st.info(f"Correct Guesses: {result['correct']}")
+            st.success(f"Reward Earned: ₹{result['reward']}")
