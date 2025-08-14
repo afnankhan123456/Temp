@@ -320,9 +320,9 @@ if st.session_state.get("otp_verified", False):
 
         return result
 
-    # Remove any leftover session state for Next button
-if "next_clicked" in st.session_state:
-    del st.session_state["next_clicked"]
+    # Force clear full session state at start
+for key in list(st.session_state.keys()):
+    del st.session_state[key]
 
 # --- UI Inputs ---
 st.header("🎮 Play the Game")
@@ -340,6 +340,8 @@ if bet:
         st.success(f"Answer: {result['answer']}")
         st.info(f"Correct Guesses: {result['correct']}")
         st.success(f"Reward Earned: ₹{result['reward']}")
+
+
 
 
 
