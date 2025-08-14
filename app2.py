@@ -321,36 +321,24 @@ if st.session_state.get("otp_verified", False):
 
         return result
 
-# --- UI Inputs ---
-st.header("🎮 Play the Game")
+# --- Game UI (sirf OTP verify hone ke baad) ---
+if st.session_state.get("otp_verified"):  # OTP verified ke baad hi
+    st.header("🎮 Play the Game")
 
-bet = st.number_input("Enter Bet Amount", min_value=1)
-if bet:
+    bet = st.number_input("Enter Bet Amount", min_value=1)
+    if bet:
+        guess1 = st.radio("🎯 Select 1st Number", [1, 2, 3], key="g1", horizontal=True)
+        guess2 = st.radio("🎯 Select 2nd Number", [1, 2, 3], key="g2", horizontal=True)
+        guess3 = st.radio("🎯 Select 3rd Number", [1, 2, 3], key="g3", horizontal=True)
 
-    # Radio buttons for guesses
-    guess1 = st.radio("🎯 Select 1st Number", [1, 2, 3], key="g1", horizontal=True)
-    guess2 = st.radio("🎯 Select 2nd Number", [1, 2, 3], key="g2", horizontal=True)
-    guess3 = st.radio("🎯 Select 3rd Number", [1, 2, 3], key="g3", horizontal=True)
+        if st.button("Submit Guess"):
+            user_guess = [guess1, guess2, guess3]
+            result = play_game(email, user_guess, bet)
 
-    # Submit button
-    if st.button("Submit Guess"):
-        user_guess = [guess1, guess2, guess3]
-        result = play_game(email, user_guess, bet)
+            st.success(f"Answer: {result['answer']}")
+            st.info(f"Correct Guesses: {result['correct']}")
+            st.success(f"Reward Earned: ₹{result['reward']}")
 
-        st.success(f"Answer: {result['answer']}")
-        st.info(f"Correct Guesses: {result['correct']}")
-        st.success(f"Reward Earned: ₹{result['reward']}")
 
-# --- CSS Styling ---
-st.markdown("""
-<style>
-/* Radio labels: blue color and bigger font */
-div[role="radiogroup"] label {
-    color: blue !important;
-    font-size: 20px !important;
-    font-weight: bold !important;
-}
-</style>
-""", unsafe_allow_html=True)
 
 
