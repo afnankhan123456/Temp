@@ -335,7 +335,7 @@ import streamlit as st
 def play_game(email, user_guess, user_bet):
     return {
         "answer": [1, 2, 3],
-        "correct": sum([user_guess[i] == [1,2,3][i] for i in range(3)]),
+        "correct": sum([user_guess[i] == [1, 2, 3][i] for i in range(3)]),
         "reward": user_bet * 2
     }
 
@@ -345,11 +345,10 @@ def horizontal_radio(label, key):
     choice = st.radio(
         "",
         [1, 2, 3],
-        index=st.session_state.get(key, 0),
+        index=0,
         horizontal=True,
         key=key
     )
-    st.session_state[key] = choice
     return choice
 
 # --- UI ---
@@ -370,3 +369,8 @@ if st.session_state.get("otp_verified"):
             st.success(f"Answer: {result['answer']}")
             st.info(f"Correct Guesses: {result['correct']}")
             st.success(f"Reward Earned: ₹{result['reward']}")
+
+            st.success(f"Answer: {result['answer']}")
+            st.info(f"Correct Guesses: {result['correct']}")
+            st.success(f"Reward Earned: ₹{result['reward']}")
+
