@@ -329,6 +329,39 @@ def play_game(email, user_guess, user_bet):
     return result
 
 
+import streamlit as st
+
+# --- User Data Storage ---
+if "users" not in st.session_state:
+    st.session_state.users = {}
+
+users = st.session_state.users
+
+# --- Dummy play_game function (replace with actual) ---
+def play_game(email, user_guess, user_bet):
+    # Dummy result for demo
+    return {
+        "answer": [1, 2, 3],
+        "correct": sum([user_guess[i] == [1,2,3][i] for i in range(3)]),
+        "reward": user_bet * 2
+    }
+
+# --- Horizontal button selection helper ---
+def horizontal_buttons(label, key):
+    st.markdown(f'<span style="color:blue; font-size:40px;">{label}</span>', unsafe_allow_html=True)
+    cols = st.columns(3)
+    selected = st.session_state.get(key, None)
+    for i, col in enumerate(cols, start=1):
+        color = "white"
+        text_color = "black"
+        if selected == i:
+            color = "#1f77b4"   # Blue background for selected
+            text_color = "white"
+        if col.button(str(i), key=f"{key}_{i}"):
+            st.session_state[key] = i
+            selected = i
+    return st.session_state.get(key, 1)
+
 # --- UI ---
 if st.session_state.get("otp_verified"):
 
@@ -338,34 +371,12 @@ if st.session_state.get("otp_verified"):
 
     if bet > 0:
 
-        # 1st Number - Horizontal Buttons
-        st.markdown('<span style="color:blue; font-size:40px;">🎯 Select 1st Number</span>', unsafe_allow_html=True)
-        cols1 = st.columns(3)
-        guess1 = None
-        for i, col in enumerate(cols1, start=1):
-            if col.button(str(i), key=f"btn1_{i}"):
-                guess1 = i
+        guess1 = horizontal_buttons("🎯 Select 1st Number", "guess1")
+        guess2 = horizontal_buttons("🎯 Select 2nd Number", "guess2")
+        guess3 = horizontal_buttons("🎯 Select 3rd Number", "guess3")
 
-        # 2nd Number - Horizontal Buttons
-        st.markdown('<span style="color:blue; font-size:40px;">🎯 Select 2nd Number</span>', unsafe_allow_html=True)
-        cols2 = st.columns(3)
-        guess2 = None
-        for i, col in enumerate(cols2, start=1):
-            if col.button(str(i), key=f"btn2_{i}"):
-                guess2 = i
-
-        # 3rd Number - Horizontal Buttons
-        st.markdown('<span style="color:blue; font-size:40px;">🎯 Select 3rd Number</span>', unsafe_allow_html=True)
-        cols3 = st.columns(3)
-        guess3 = None
-        for i, col in enumerate(cols3, start=1):
-            if col.button(str(i), key=f"btn3_{i}"):
-                guess3 = i
-
-        # Submit guess
         if st.button("Submit Guess", key="submit_guess"):
-            # Agar koi select nahi kiya to default 1
-            user_guess = [guess1 or 1, guess2 or 1, guess3 or 1]
+            user_guess = [guess1, guess2, guess3]
             result = play_game(st.session_state.get("email", "guest"), user_guess, bet)
 
             st.success(f"Answer: {result['answer']}")
