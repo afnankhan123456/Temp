@@ -329,8 +329,6 @@ def play_game(email, user_guess, user_bet):
     return result
 
 
-
-
 import streamlit as st
 
 # --- User Data Storage ---
@@ -339,7 +337,7 @@ if "users" not in st.session_state:
 
 users = st.session_state.users
 
-# --- Dummy play_game function ---
+# --- Dummy play_game function (replace with actual) ---
 def play_game(email, user_guess, user_bet):
     return {
         "answer": [1, 2, 3],
@@ -347,26 +345,39 @@ def play_game(email, user_guess, user_bet):
         "reward": user_bet * 2
     }
 
-# --- Horizontal buttons using columns (reliable) ---
+# --- Horizontal buttons with highlight ---
 def horizontal_buttons(label, key):
     st.markdown(f'<span style="color:blue; font-size:40px;">{label}</span>', unsafe_allow_html=True)
     
     if key not in st.session_state:
-        st.session_state[key] = 1  # default
+        st.session_state[key] = 1  # default selection
     
-    cols = st.columns(3)
-    for i, col in enumerate(cols, start=1):
+    buttons_html = ""
+    for i in range(1, 4):
         if st.session_state[key] == i:
-            button_color = "#1f77b4"  # blue
-            text_color = "white"
+            buttons_html += f'<button onclick="document.dispatchEvent(new CustomEvent(\'button_click\', {{detail:{i}}}))" style="background-color:#1f77b4; color:white; font-size:24px; height:60px; width:60px; margin-right:10px; border-radius:10px;">{i}</button>'
         else:
-            button_color = "white"
-            text_color = "black"
-        
-        if col.button(f"{i}", key=f"{key}_{i}"):
-            st.session_state[key] = i
+            buttons_html += f'<button onclick="document.dispatchEvent(new CustomEvent(\'button_click\', {{detail:{i}}}))" style="background-color:white; color:black; font-size:24px; height:60px; width:60px; margin-right:10px; border-radius:10px;">{i}</button>'
     
-    # Return current selection
+    st.markdown(f'<div style="display:flex; flex-wrap:wrap;">{buttons_html}</div>', unsafe_allow_html=True)
+    
+    # JavaScript event listener to update session state
+    js = f"""
+    <script>
+    const buttons = document.querySelectorAll("button");
+    buttons.forEach(btn => {{
+        btn.addEventListener("click", (e) => {{
+            fetch("/_stcore/set_session_state", {{
+                method: "POST",
+                body: JSON.stringify({{"{key}": parseInt(btn.innerText)}}),
+                headers: {{"Content-Type": "application/json"}}
+            }});
+        }});
+    }});
+    </script>
+    """
+    st.components.v1.html(js, height=0)
+    
     return st.session_state[key]
 
 # --- UI ---
@@ -377,6 +388,7 @@ if st.session_state.get("otp_verified"):
     bet = st.number_input("Enter Bet Amount", min_value=1, key="bet_input")
 
     if bet > 0:
+
         guess1 = horizontal_buttons("🎯 Select 1st Number", "guess1")
         guess2 = horizontal_buttons("🎯 Select 2nd Number", "guess2")
         guess3 = horizontal_buttons("🎯 Select 3rd Number", "guess3")
