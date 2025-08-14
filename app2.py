@@ -337,7 +337,7 @@ if "users" not in st.session_state:
 
 users = st.session_state.users
 
-# --- Dummy play_game function (replace with actual) ---
+# --- Dummy play_game function ---
 def play_game(email, user_guess, user_bet):
     return {
         "answer": [1, 2, 3],
@@ -345,38 +345,24 @@ def play_game(email, user_guess, user_bet):
         "reward": user_bet * 2
     }
 
-# --- Horizontal buttons with highlight ---
+# --- Horizontal buttons with highlight (Python only) ---
 def horizontal_buttons(label, key):
     st.markdown(f'<span style="color:blue; font-size:40px;">{label}</span>', unsafe_allow_html=True)
     
     if key not in st.session_state:
         st.session_state[key] = 1  # default selection
     
-    buttons_html = ""
-    for i in range(1, 4):
+    cols = st.columns(3)
+    for i, col in enumerate(cols, start=1):
         if st.session_state[key] == i:
-            buttons_html += f'<button onclick="document.dispatchEvent(new CustomEvent(\'button_click\', {{detail:{i}}}))" style="background-color:#1f77b4; color:white; font-size:24px; height:60px; width:60px; margin-right:10px; border-radius:10px;">{i}</button>'
+            button_color = "#1f77b4"  # blue
+            text_color = "white"
         else:
-            buttons_html += f'<button onclick="document.dispatchEvent(new CustomEvent(\'button_click\', {{detail:{i}}}))" style="background-color:white; color:black; font-size:24px; height:60px; width:60px; margin-right:10px; border-radius:10px;">{i}</button>'
-    
-    st.markdown(f'<div style="display:flex; flex-wrap:wrap;">{buttons_html}</div>', unsafe_allow_html=True)
-    
-    # JavaScript event listener to update session state
-    js = f"""
-    <script>
-    const buttons = document.querySelectorAll("button");
-    buttons.forEach(btn => {{
-        btn.addEventListener("click", (e) => {{
-            fetch("/_stcore/set_session_state", {{
-                method: "POST",
-                body: JSON.stringify({{"{key}": parseInt(btn.innerText)}}),
-                headers: {{"Content-Type": "application/json"}}
-            }});
-        }});
-    }});
-    </script>
-    """
-    st.components.v1.html(js, height=0)
+            button_color = "white"
+            text_color = "black"
+        
+        if col.button(f"{i}", key=f"{key}_{i}", help="Click to select"):
+            st.session_state[key] = i
     
     return st.session_state[key]
 
@@ -400,3 +386,5 @@ if st.session_state.get("otp_verified"):
             st.success(f"Answer: {result['answer']}")
             st.info(f"Correct Guesses: {result['correct']}")
             st.success(f"Reward Earned: ₹{result['reward']}")
+
+
