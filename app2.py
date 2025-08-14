@@ -330,12 +330,7 @@ bet = st.number_input("Enter Bet Amount", min_value=1)
 if bet:
     st.write("🎯 Select your guesses:")
 
-    # Use columns to place buttons horizontally
-    cols1 = st.columns(3)
-    cols2 = st.columns(3)
-    cols3 = st.columns(3)
-
-    # Store guesses in session_state
+    # Initialize guesses
     if "guess1" not in st.session_state:
         st.session_state.guess1 = None
     if "guess2" not in st.session_state:
@@ -343,22 +338,21 @@ if bet:
     if "guess3" not in st.session_state:
         st.session_state.guess3 = None
 
-    # First guess buttons
-    for i, col in enumerate(cols1, start=1):
-        if col.button(f"{i}", key=f"g1_{i}"):
-            st.session_state.guess1 = i
+    # Function to create circular buttons
+    def circular_buttons(key_prefix, guess_key):
+        cols = st.columns(3)
+        for i, col in enumerate(cols, start=1):
+            if col.button(f"{i}", key=f"{key_prefix}_{i}"):
+                st.session_state[guess_key] = i
+        # Show selected
+        if st.session_state[guess_key]:
+            st.write(f"Selected: {st.session_state[guess_key]}")
 
-    # Second guess buttons
-    for i, col in enumerate(cols2, start=1):
-        if col.button(f"{i}", key=f"g2_{i}"):
-            st.session_state.guess2 = i
+    circular_buttons("g1", "guess1")
+    circular_buttons("g2", "guess2")
+    circular_buttons("g3", "guess3")
 
-    # Third guess buttons
-    for i, col in enumerate(cols3, start=1):
-        if col.button(f"{i}", key=f"g3_{i}"):
-            st.session_state.guess3 = i
-
-    # Submit button
+    # Submit
     if st.button("Submit Guess"):
         if st.session_state.guess1 and st.session_state.guess2 and st.session_state.guess3:
             user_guess = [st.session_state.guess1, st.session_state.guess2, st.session_state.guess3]
@@ -369,3 +363,19 @@ if bet:
             st.success(f"Reward Earned: ₹{result['reward']}")
         else:
             st.warning("Please select all three guesses!")
+
+# CSS for circular look
+st.markdown("""
+<style>
+button[kind="secondary"] {
+    border-radius: 50%;
+    height: 60px !important;
+    width: 60px !important;
+    font-size: 20px;
+    margin: 5px;
+}
+</style>
+""", unsafe_allow_html=True)
+
+
+
