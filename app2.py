@@ -323,59 +323,19 @@ if st.session_state.get("otp_verified", False):
     # --- UI Inputs ---
     st.header("🎮 Play the Game")
 
-   import streamlit as st
+    bet = st.number_input("Enter Bet Amount", min_value=1)
+    if bet:
+        if st.button("Next ➡️"):
+            st.session_state.next_clicked = True
 
-bet = st.number_input("Enter Bet Amount", min_value=1)
+        guess1 = st.radio("🎯 Select 1st Number", [1, 2, 3], key="g1", horizontal=True)
+        guess2 = st.radio("🎯 Select 2nd Number", [1, 2, 3], key="g2", horizontal=True)
+        guess3 = st.radio("🎯 Select 3rd Number", [1, 2, 3], key="g3", horizontal=True)
 
-if bet:
-    st.write("🎯 Select your guesses:")
-
-    # Initialize guesses
-    if "guess1" not in st.session_state:
-        st.session_state.guess1 = None
-    if "guess2" not in st.session_state:
-        st.session_state.guess2 = None
-    if "guess3" not in st.session_state:
-        st.session_state.guess3 = None
-
-    # Function to create circular buttons
-    def circular_buttons(key_prefix, guess_key):
-        cols = st.columns(3)
-        for i, col in enumerate(cols, start=1):
-            if col.button(f"{i}", key=f"{key_prefix}_{i}"):
-                st.session_state[guess_key] = i
-        # Show selected
-        if st.session_state[guess_key]:
-            st.write(f"Selected: {st.session_state[guess_key]}")
-
-    circular_buttons("g1", "guess1")
-    circular_buttons("g2", "guess2")
-    circular_buttons("g3", "guess3")
-
-    # Submit
-    if st.button("Submit Guess"):
-        if st.session_state.guess1 and st.session_state.guess2 and st.session_state.guess3:
-            user_guess = [st.session_state.guess1, st.session_state.guess2, st.session_state.guess3]
+        if st.button("Submit Guess"):
+            user_guess = [guess1, guess2, guess3]
             result = play_game(email, user_guess, bet)
 
             st.success(f"Answer: {result['answer']}")
             st.info(f"Correct Guesses: {result['correct']}")
             st.success(f"Reward Earned: ₹{result['reward']}")
-        else:
-            st.warning("Please select all three guesses!")
-
-# CSS for circular look
-st.markdown("""
-<style>
-button[kind="secondary"] {
-    border-radius: 50%;
-    height: 60px !important;
-    width: 60px !important;
-    font-size: 20px;
-    margin: 5px;
-}
-</style>
-""", unsafe_allow_html=True)
-
-
-
