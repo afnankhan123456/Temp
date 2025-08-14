@@ -345,11 +345,40 @@ def play_game(email, user_guess, user_bet):
         "reward": user_bet * 2
     }
 
-# --- Horizontal buttons with highlight using st.radio ---
+# --- Horizontal buttons with highlight ---
 def horizontal_buttons(label, key):
     st.markdown(f'<span style="color:blue; font-size:40px;">{label}</span>', unsafe_allow_html=True)
-    selected = st.radio("", [1, 2, 3], key=key, horizontal=True)
-    return selected
+    
+    if key not in st.session_state:
+        st.session_state[key] = 1  # default selection
+    
+    buttons_html = ""
+    for i in range(1, 4):
+        if st.session_state[key] == i:
+            buttons_html += f'<button onclick="document.dispatchEvent(new CustomEvent(\'button_click\', {{detail:{i}}}))" style="background-color:#1f77b4; color:white; font-size:36px; height:80px; width:80px; margin-right:10px; border-radius:10px;">{i}</button>'
+        else:
+            buttons_html += f'<button onclick="document.dispatchEvent(new CustomEvent(\'button_click\', {{detail:{i}}}))" style="background-color:white; color:black; font-size:36px; height:80px; width:80px; margin-right:10px; border-radius:10px;">{i}</button>'
+    
+    st.markdown(f'<div style="display:flex; flex-wrap:wrap;">{buttons_html}</div>', unsafe_allow_html=True)
+    
+    # JavaScript event listener to update session state
+    js = f"""
+    <script>
+    const buttons = document.querySelectorAll("button");
+    buttons.forEach(btn => {{
+        btn.addEventListener("click", (e) => {{
+            fetch("/_stcore/set_session_state", {{
+                method: "POST",
+                body: JSON.stringify({{"{key}": parseInt(btn.innerText)}}),
+                headers: {{"Content-Type": "application/json"}}
+            }});
+        }}});
+    }});
+    </script>
+    """
+    st.components.v1.html(js, height=0)
+    
+    return st.session_state[key]
 
 # --- UI ---
 if st.session_state.get("otp_verified"):
