@@ -340,13 +340,13 @@ if st.session_state.get("otp_verified"):
     if bet > 0:
 
         # Styled labels for radio buttons
-        st.markdown('<span style="color:blue; font-size:20px;">🎯 Select 1st Number</span>', unsafe_allow_html=True)
+        st.markdown('<span style="color:blue; font-size:40px;">🎯 Select 1st Number</span>', unsafe_allow_html=True)
         guess1 = st.radio("", [1, 2, 3], key="g1", horizontal=True)
 
-        st.markdown('<span style="color:blue; font-size:20px;">🎯 Select 2nd Number</span>', unsafe_allow_html=True)
+        st.markdown('<span style="color:blue; font-size:40px;">🎯 Select 2nd Number</span>', unsafe_allow_html=True)
         guess2 = st.radio("", [1, 2, 3], key="g2", horizontal=True)
 
-        st.markdown('<span style="color:blue; font-size:20px;">🎯 Select 3rd Number</span>', unsafe_allow_html=True)
+        st.markdown('<span style="color:blue; font-size:40px;">🎯 Select 3rd Number</span>', unsafe_allow_html=True)
         guess3 = st.radio("", [1, 2, 3], key="g3", horizontal=True)
 
         # Submit guess
@@ -357,5 +357,6 @@ if st.session_state.get("otp_verified"):
             st.success(f"Answer: {result['answer']}")
             st.info(f"Correct Guesses: {result['correct']}")
             st.success(f"Reward Earned: ₹{result['reward']}")
+
 
 
