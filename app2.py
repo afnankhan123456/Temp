@@ -325,77 +325,27 @@ if st.session_state.get("otp_verified", False):
 
 
 
-import streamlit as st
-from streamlit_option_menu import option_menu
-import random
-
-# -------------------------
-# --- Game UI (OTP verified only) ---
-# -------------------------
-if st.session_state.get("otp_verified"):
-
+   if st.session_state.get("otp_verified"):
+       # --- UI Inputs ---
     st.header("🎮 Play the Game")
 
     bet = st.number_input("Enter Bet Amount", min_value=1)
     if bet:
+        if st.button("Next ➡️"):
+            st.session_state.next_clicked = True
 
-        # --- Horizontal styled guesses using option_menu ---
-        guess1 = option_menu(
-            menu_title="🎯 Select 1st Number",
-            options=["1", "2", "3"],
-            orientation="horizontal",
-            styles={
-                "nav-link": {"font-size": "20px", "color": "blue", "font-weight": "bold"},
-                "nav-link-selected": {"background-color": "#d1e7ff"},
-            },
-        )
+        guess1 = st.radio("🎯 Select 1st Number", [1, 2, 3], key="g1", horizontal=True)
+        guess2 = st.radio("🎯 Select 2nd Number", [1, 2, 3], key="g2", horizontal=True)
+        guess3 = st.radio("🎯 Select 3rd Number", [1, 2, 3], key="g3", horizontal=True)
 
-        guess2 = option_menu(
-            menu_title="🎯 Select 2nd Number",
-            options=["1", "2", "3"],
-            orientation="horizontal",
-            styles={
-                "nav-link": {"font-size": "20px", "color": "blue", "font-weight": "bold"},
-                "nav-link-selected": {"background-color": "#d1e7ff"},
-            },
-        )
-
-        guess3 = option_menu(
-            menu_title="🎯 Select 3rd Number",
-            options=["1", "2", "3"],
-            orientation="horizontal",
-            styles={
-                "nav-link": {"font-size": "20px", "color": "blue", "font-weight": "bold"},
-                "nav-link-selected": {"background-color": "#d1e7ff"},
-            },
-        )
-
-        # --- Submit button ---
         if st.button("Submit Guess"):
-            user_guess = [int(guess1), int(guess2), int(guess3)]
+            user_guess = [guess1, guess2, guess3]
+            result = play_game(email, user_guess, bet)
 
-            # Dummy play_game logic
-            answer = [random.randint(1, 3) for _ in range(3)]
-            correct = sum([user_guess[i] == answer[i] for i in range(3)])
-            reward = bet * correct
+            st.success(f"Answer: {result['answer']}")
+            st.info(f"Correct Guesses: {result['correct']}")
+            st.success(f"Reward Earned: ₹{result['reward']}")
 
-            st.success(f"Answer: {answer}")
-            st.info(f"Correct Guesses: {correct}")
-            st.success(f"Reward Earned: ₹{reward}")
-
-        # --- Submit button style ---
-        st.markdown("""
-        <style>
-        div.stButton > button:first-child {
-            height: 60px;
-            width: 250px;
-            font-size: 22px;
-            background-color: #4CAF50;
-            color: white;
-            border-radius: 10px;
-        }
-        </style>
-        """, unsafe_allow_html=True)
 
 
 
