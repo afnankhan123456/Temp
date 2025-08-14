@@ -225,133 +225,130 @@ if st.session_state.get("otp_verified", False):
 
     users = st.session_state.users
 
-    # --- Game Logic Functions ---
-    def get_winning_rounds(base=0):
-        return [base + i for i in [4, 9, 15, 20]]
+    import streamlit as st
+import random
 
-    def count_correct(user_guess, system_answer):
-        return sum([user_guess[i] == system_answer[i] for i in range(3)])
+# --- User Data Storage ---
+if "users" not in st.session_state:
+    st.session_state.users = {}
 
-    def get_min_bet(email, upto_round):
-        prev_bets = [g['amount'] for g in users[email]['games'] if g['round'] < upto_round]
-        return min(prev_bets) if prev_bets else 0
+users = st.session_state.users
 
-    def play_game(email, user_guess, user_bet):
-        if email not in users:
-            users[email] = {"games": []}
+# --- Game Logic Functions ---
+def get_winning_rounds(base=0):
+    return [base + i for i in [4, 9, 15, 20]]
 
-        round_no = len(users[email]['games']) + 1
-        total_games = len(users[email]['games'])
+def count_correct(user_guess, system_answer):
+    return sum([user_guess[i] == system_answer[i] for i in range(3)])
 
-        base = (total_games // 20) * 20
-        winning_rounds = get_winning_rounds(base)
+def get_min_bet(email, upto_round):
+    prev_bets = [g['amount'] for g in users[email]['games'] if g['round'] < upto_round]
+    return min(prev_bets) if prev_bets else 0
 
-        if round_no in winning_rounds:
-            min_bet = get_min_bet(email, round_no)
-            user_bet = min_bet
+def play_game(email, user_guess, user_bet):
+    if email not in users:
+        users[email] = {"games": []}
 
-        # Random answer generate
-        if round_no in winning_rounds:
-            system_answer = user_guess.copy()
-        else:
-            while True:
-                system_answer = random.sample([1, 2, 3], 3)
-                if count_correct(user_guess, system_answer) < 3:
-                    break
+    round_no = len(users[email]['games']) + 1
+    total_games = len(users[email]['games'])
 
-        correct = count_correct(user_guess, system_answer)
+    base = (total_games // 20) * 20
+    winning_rounds = get_winning_rounds(base)
 
-        # Reward calculation
-        if correct == 1:
-            reward = round(user_bet * 0.25, 2)  # 1/4 bet
-        elif correct == 2:
-            reward = round(user_bet * 0.50, 2)  # half bet
-        elif correct == 3:
-            reward = round(user_bet * 2, 2)     # double bet
-            st.success("🎉 All 3 guesses are correct! You win double the bet!")
+    if round_no in winning_rounds:
+        min_bet = get_min_bet(email, round_no)
+        user_bet = min_bet
 
+    # Random answer generation
+    if round_no in winning_rounds:
+        system_answer = user_guess.copy()
+    else:
+        while True:
+            system_answer = random.sample([1, 2, 3], 3)
+            if count_correct(user_guess, system_answer) < 3:
+                break
 
-            # Balloons + Explosion
-            st.balloons()
-            explosion_html = """
-            <div class="explosion"></div>
-            <style>
-            .explosion {
-              position: relative;
-              width: 100px;
-              height: 100px;
-              margin: 50px auto;
-            }
-            .explosion::before {
-              content: '';
-              position: absolute;
-              width: 200px;
-              height: 200px;
-              background: radial-gradient(circle, red, orange, yellow, white);
-              border-radius: 50%;
-              animation: boom 0.7s ease-out forwards;
-              transform: scale(0);
-              opacity: 0.8;
-              left: -50px;
-              top: -50px;
-              z-index: 999;
-            }
-            @keyframes boom {
-              to {
-                transform: scale(2);
-                opacity: 0;
-              }
-            }
-            </style>
-            """
-            st.markdown(explosion_html, unsafe_allow_html=True)
-        else:
-            reward = 0
+    correct = count_correct(user_guess, system_answer)
 
-        # Store result
-        result = {
-            "round": round_no,
-            "guess": user_guess,
-            "answer": system_answer,
-            "correct": correct,
-            "amount": user_bet,
-            "reward": reward
+    # Reward calculation
+    if correct == 1:
+        reward = round(user_bet * 0.25, 2)
+    elif correct == 2:
+        reward = round(user_bet * 0.50, 2)
+    elif correct == 3:
+        reward = round(user_bet * 2, 2)
+        st.success("🎉 All 3 guesses are correct! You win double the bet!")
+        st.balloons()
+
+        explosion_html = """
+        <div class="explosion"></div>
+        <style>
+        .explosion {
+          position: relative;
+          width: 100px;
+          height: 100px;
+          margin: 50px auto;
         }
-        users[email]['games'].append(result)
+        .explosion::before {
+          content: '';
+          position: absolute;
+          width: 200px;
+          height: 200px;
+          background: radial-gradient(circle, red, orange, yellow, white);
+          border-radius: 50%;
+          animation: boom 0.7s ease-out forwards;
+          transform: scale(0);
+          opacity: 0.8;
+          left: -50px;
+          top: -50px;
+          z-index: 999;
+        }
+        @keyframes boom {
+          to {
+            transform: scale(2);
+            opacity: 0;
+          }
+        }
+        </style>
+        """
+        st.markdown(explosion_html, unsafe_allow_html=True)
+    else:
+        reward = 0
 
-        return result
+    # Store result
+    result = {
+        "round": round_no,
+        "guess": user_guess,
+        "answer": system_answer,
+        "correct": correct,
+        "amount": user_bet,
+        "reward": reward
+    }
+    users[email]['games'].append(result)
 
+    return result
 
+# --- UI ---
+if st.session_state.get("otp_verified"):
 
-
-
-    if st.session_state.get("otp_verified"):
-       # --- UI Inputs ---
     st.header("🎮 Play the Game")
 
-    bet = st.number_input("Enter Bet Amount", min_value=1)
-    if bet:
+    # Bet input
+    bet = st.number_input("Enter Bet Amount", min_value=1, key="bet_input")
 
+    # Proceed only if bet entered
+    if bet > 0:
+
+        # Show guess options
         guess1 = st.radio("🎯 Select 1st Number", [1, 2, 3], key="g1", horizontal=True)
         guess2 = st.radio("🎯 Select 2nd Number", [1, 2, 3], key="g2", horizontal=True)
         guess3 = st.radio("🎯 Select 3rd Number", [1, 2, 3], key="g3", horizontal=True)
 
-        if st.button("Submit Guess"):
+        # Submit guess
+        if st.button("Submit Guess", key="submit_guess"):
             user_guess = [guess1, guess2, guess3]
-            result = play_game(email, user_guess, bet)
+            result = play_game(st.session_state.get("email", "guest"), user_guess, bet)
 
             st.success(f"Answer: {result['answer']}")
             st.info(f"Correct Guesses: {result['correct']}")
             st.success(f"Reward Earned: ₹{result['reward']}")
-
-
-
-
-
-
-
-
-
-
-
-
