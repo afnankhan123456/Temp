@@ -105,11 +105,29 @@ image_url = "https://raw.githubusercontent.com/afnankhan123456/stremlit--game/ma
 img_base64 = get_base64_image(image_url)
 
 st.markdown(f"""
+    <style>
+        .marquee {{
+            width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+            box-sizing: border-box;
+            animation: marquee 8s linear infinite;
+        }}
+
+        @keyframes marquee {{
+            0%   {{ transform: translateX(100%); }}
+            100% {{ transform: translateX(-100%); }}
+        }}
+    </style>
+
     <div style='display: flex; align-items: center; justify-content: center; margin-bottom: 20px;'>
         <img src="data:image/jpeg;base64,{img_base64}" width="100" style="margin-right: 20px; border-radius: 10px;">
-        <h1 style="color: #007BFF; font-family: Arial, sans-serif;">WELCOME TO THE BATTLEZONE ⚔️🔥</h1>
+        <h1 class="marquee" style="color: #007BFF; font-family: Arial, sans-serif;">
+            WELCOME TO THE BATTLEZONE ⚔️🔥
+        </h1>
     </div>
 """, unsafe_allow_html=True)
+
 
 # Reward image
 REWARD_IMAGE_URL = "https://raw.githubusercontent.com/afnankhan123456/stremlit--game/main/2nd%20logo.jpg"
@@ -345,6 +363,7 @@ if st.session_state.get("otp_verified", False):
             st.success(f"Answer: {result['answer']}")
             st.info(f"Correct Guesses: {result['correct']}")
             st.success(f"Reward Earned: ₹{result['reward']}")
+
 
 
 
