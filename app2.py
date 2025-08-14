@@ -331,12 +331,6 @@ def play_game(email, user_guess, user_bet):
 
 import streamlit as st
 
-# --- User Data Storage ---
-if "users" not in st.session_state:
-    st.session_state.users = {}
-
-users = st.session_state.users
-
 # --- Dummy play_game function ---
 def play_game(email, user_guess, user_bet):
     return {
@@ -345,46 +339,34 @@ def play_game(email, user_guess, user_bet):
         "reward": user_bet * 2
     }
 
-# --- Horizontal buttons with highlight (Python only) ---
-def horizontal_buttons(label, key):
+# --- Horizontal radio with big buttons ---
+def horizontal_radio(label, key):
     st.markdown(f'<span style="color:blue; font-size:40px;">{label}</span>', unsafe_allow_html=True)
-    
-    if key not in st.session_state:
-        st.session_state[key] = 1  # default selection
-    
-    cols = st.columns(3)
-    for i, col in enumerate(cols, start=1):
-        if st.session_state[key] == i:
-            button_color = "#1f77b4"  # blue
-            text_color = "white"
-        else:
-            button_color = "white"
-            text_color = "black"
-        
-        if col.button(f"{i}", key=f"{key}_{i}", help="Click to select"):
-            st.session_state[key] = i
-    
-    return st.session_state[key]
+    choice = st.radio(
+        "",
+        [1, 2, 3],
+        index=st.session_state.get(key, 0),
+        horizontal=True,
+        key=key
+    )
+    st.session_state[key] = choice
+    return choice
 
 # --- UI ---
 if st.session_state.get("otp_verified"):
 
     st.header("🎮 Play the Game")
-
     bet = st.number_input("Enter Bet Amount", min_value=1, key="bet_input")
 
     if bet > 0:
+        guess1 = horizontal_radio("🎯 Select 1st Number", "guess1")
+        guess2 = horizontal_radio("🎯 Select 2nd Number", "guess2")
+        guess3 = horizontal_radio("🎯 Select 3rd Number", "guess3")
 
-        guess1 = horizontal_buttons("🎯 Select 1st Number", "guess1")
-        guess2 = horizontal_buttons("🎯 Select 2nd Number", "guess2")
-        guess3 = horizontal_buttons("🎯 Select 3rd Number", "guess3")
-
-        if st.button("Submit Guess", key="submit_guess"):
+        if st.button("Submit Guess"):
             user_guess = [guess1, guess2, guess3]
             result = play_game(st.session_state.get("email", "guest"), user_guess, bet)
 
             st.success(f"Answer: {result['answer']}")
             st.info(f"Correct Guesses: {result['correct']}")
             st.success(f"Reward Earned: ₹{result['reward']}")
-
-
