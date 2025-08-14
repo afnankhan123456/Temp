@@ -11,13 +11,10 @@ from email.mime.multipart import MIMEMultipart
 
 # --- CONFIG ---
 FILENAME = "player_data.json"
-# IMAGE_URL_MAIN = "https://raw.githubusercontent.com/afnankhan123456/stremlit--game/main/images/main_backgrund.jpg"
 IMAGE_URL_BG = "https://raw.githubusercontent.com/afnankhan123456/stremlit--game/main/2nd%20background.jpg"
 SENDER_EMAIL = "afnank6789@gmail.com"
 APP_PASSWORD = "uiqb avim axhz knzu"
 
-# Show main image
-# st.image(IMAGE_URL_MAIN)
 
 # --- FUNCTIONS ---
 def get_base64_image(image_source):
@@ -73,22 +70,22 @@ if "user_email" not in st.session_state:
 if "sent_otp" not in st.session_state:
     st.session_state.sent_otp = ""
 
-# --- BACKGROUND SETUP BEFORE OTP ---
-if not st.session_state.otp_verified:
-    base64_image = get_base64_image(IMAGE_URL_BG)
-    st.markdown(
-        f"""
-        <style>
-        .stApp {{
-            background-image: url("data:image/jpeg;base64,{base64_image}");
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-        }}
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
+# # --- BACKGROUND SETUP BEFORE OTP ---
+# if not st.session_state.otp_verified:
+#     base64_image = get_base64_image(IMAGE_URL_BG)
+#     st.markdown(
+#         f"""
+#         <style>
+#         .stApp {{
+#             background-image: url("data:image/jpeg;base64,{base64_image}");
+#             background-size: cover;
+#             background-repeat: no-repeat;
+#             background-attachment: fixed;
+#         }}
+#         </style>
+#         """,
+#         unsafe_allow_html=True
+#     )
 
 # --- FUNCTIONS ---
 def get_base64_image(url):
@@ -358,6 +355,7 @@ if st.session_state.get("otp_verified", False):
             st.success(f"Answer: {result['answer']}")
             st.info(f"Correct Guesses: {result['correct']}")
             st.success(f"Reward Earned: ₹{result['reward']}")
+
 
 
 
