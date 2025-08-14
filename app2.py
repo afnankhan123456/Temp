@@ -15,6 +15,9 @@ IMAGE_URL_BG = "https://raw.githubusercontent.com/afnankhan123456/stremlit--game
 SENDER_EMAIL = "afnank6789@gmail.com"
 APP_PASSWORD = "uiqb avim axhz knzu"
 
+# Show main image
+st.image(IMAGE_URL_MAIN)
+
 # --- FUNCTIONS ---
 def get_base64_image(image_source):
     """Convert local file or URL to base64 string."""
@@ -71,7 +74,6 @@ if "sent_otp" not in st.session_state:
 
 # --- BACKGROUND SETUP BEFORE OTP ---
 if not st.session_state.otp_verified:
-    # Mobile-friendly background using CSS
     base64_image = get_base64_image(IMAGE_URL_BG)
     st.markdown(
         f"""
@@ -80,45 +82,18 @@ if not st.session_state.otp_verified:
             background-image: url("data:image/jpeg;base64,{base64_image}");
             background-size: cover;
             background-repeat: no-repeat;
-            background-position: center;
-        }}
-
-        /* Mobile responsiveness */
-        @media (max-width: 600px) {{
-            .stApp {{
-                background-size: contain;
-            }}
+            background-attachment: fixed;
         }}
         </style>
         """,
         unsafe_allow_html=True
     )
 
-# --- EXAMPLE APP LOGIC ---
-if not st.session_state.name_submitted:
-    player_name = st.text_input("Enter your name:")
-    if player_name and is_valid_name(player_name):
-        st.session_state.player_name = player_name
-        st.session_state.name_submitted = True
-        st.success(f"Welcome, {player_name}!")
-
-if st.session_state.name_submitted and not st.session_state.email_submitted:
-    user_email = st.text_input("Enter your Gmail:")
-    if user_email and is_valid_email(user_email):
-        st.session_state.user_email = user_email
-        st.session_state.sent_otp = str(random.randint(1000, 9999))
-        send_otp_email(user_email, st.session_state.sent_otp)
-        st.session_state.email_submitted = True
-        st.info("OTP sent to your email!")
-
-if st.session_state.email_submitted and not st.session_state.otp_verified:
-    entered_otp = st.text_input("Enter OTP:")
-    if entered_otp and entered_otp == st.session_state.sent_otp:
-        st.session_state.otp_verified = True
-        st.success("OTP verified! You can start playing now.")
-
-
-
+# --- FUNCTIONS ---
+def get_base64_image(url):
+    """Fetch image from URL and return as base64."""
+    response = requests.get(url)
+    return base64.b64encode(response.content).decode()
 
 # --- UI ---
 
@@ -128,25 +103,12 @@ image_url = "https://raw.githubusercontent.com/afnankhan123456/stremlit--game/ma
 # Chhota logo as base64 for inline HTML
 img_base64 = get_base64_image(image_url)
 
-
-
-import streamlit as st
-import time
-
-text = " WELCOME TO THE BATTLEZONE ⚔️🔥 "
-placeholder = st.empty()
-
-while True:
-    # Text ko shift kar rahe hain ek character at a time
-    text = text[1:] + text[0]
-    placeholder.markdown(f"<h1 style='color:#007BFF; font-family: Arial, sans-serif;'>{text}</h1>", unsafe_allow_html=True)
-    time.sleep(0.2)
-
-
-
-
-
-
+st.markdown(f"""
+    <div style='display: flex; align-items: center; justify-content: center; margin-bottom: 20px;'>
+        <img src="data:image/jpeg;base64,{img_base64}" width="100" style="margin-right: 20px; border-radius: 10px;">
+        <h1 style="color: #007BFF; font-family: Arial, sans-serif;">WELCOME TO THE BATTLEZONE ⚔️🔥</h1>
+    </div>
+""", unsafe_allow_html=True)
 
 # Reward image
 REWARD_IMAGE_URL = "https://raw.githubusercontent.com/afnankhan123456/stremlit--game/main/2nd%20logo.jpg"
@@ -273,32 +235,27 @@ if st.session_state.get("otp_verified", False):
         prev_bets = [g['amount'] for g in users[email]['games'] if g['round'] < upto_round]
         return min(prev_bets) if prev_bets else 0
 
-
     def play_game(email, user_guess, user_bet):
         if email not in users:
             users[email] = {"games": []}
 
         round_no = len(users[email]['games']) + 1
         total_games = len(users[email]['games'])
-        
+
         base = (total_games // 20) * 20
         winning_rounds = get_winning_rounds(base)
 
-
-        # Adjust bet for winning rounds
         if round_no in winning_rounds:
             min_bet = get_min_bet(email, round_no)
             user_bet = min_bet
 
-        # Generate system answer
+        # Random answer generate
         if round_no in winning_rounds:
-        # All 3 guesses correct
             system_answer = user_guess.copy()
         else:
             while True:
                 system_answer = random.sample([1, 2, 3], 3)
-                correct = count_correct(user_guess, system_answer)
-                if correct in [1, 2]:
+                if count_correct(user_guess, system_answer) < 3:
                     break
 
         correct = count_correct(user_guess, system_answer)
@@ -382,32 +339,3 @@ if st.session_state.get("otp_verified", False):
             st.success(f"Answer: {result['answer']}")
             st.info(f"Correct Guesses: {result['correct']}")
             st.success(f"Reward Earned: ₹{result['reward']}")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
