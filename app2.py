@@ -71,6 +71,7 @@ if "sent_otp" not in st.session_state:
 
 # --- BACKGROUND SETUP BEFORE OTP ---
 if not st.session_state.otp_verified:
+    # Mobile-friendly background using CSS
     base64_image = get_base64_image(IMAGE_URL_BG)
     st.markdown(
         f"""
@@ -82,7 +83,7 @@ if not st.session_state.otp_verified:
             background-position: center;
         }}
 
-        /* Responsive for mobile */
+        /* Mobile responsiveness */
         @media (max-width: 600px) {{
             .stApp {{
                 background-size: contain;
@@ -93,11 +94,31 @@ if not st.session_state.otp_verified:
         unsafe_allow_html=True
     )
 
-# # --- FUNCTIONS ---
-# def get_base64_image(url):
-#     """Fetch image from URL and return as base64."""
-#     response = requests.get(url)
-#     return base64.b64encode(response.content).decode()
+# --- EXAMPLE APP LOGIC ---
+if not st.session_state.name_submitted:
+    player_name = st.text_input("Enter your name:")
+    if player_name and is_valid_name(player_name):
+        st.session_state.player_name = player_name
+        st.session_state.name_submitted = True
+        st.success(f"Welcome, {player_name}!")
+
+if st.session_state.name_submitted and not st.session_state.email_submitted:
+    user_email = st.text_input("Enter your Gmail:")
+    if user_email and is_valid_email(user_email):
+        st.session_state.user_email = user_email
+        st.session_state.sent_otp = str(random.randint(1000, 9999))
+        send_otp_email(user_email, st.session_state.sent_otp)
+        st.session_state.email_submitted = True
+        st.info("OTP sent to your email!")
+
+if st.session_state.email_submitted and not st.session_state.otp_verified:
+    entered_otp = st.text_input("Enter OTP:")
+    if entered_otp and entered_otp == st.session_state.sent_otp:
+        st.session_state.otp_verified = True
+        st.success("OTP verified! You can start playing now.")
+
+
+
 
 # --- UI ---
 
@@ -361,6 +382,7 @@ if st.session_state.get("otp_verified", False):
             st.success(f"Answer: {result['answer']}")
             st.info(f"Correct Guesses: {result['correct']}")
             st.success(f"Reward Earned: ₹{result['reward']}")
+
 
 
 
