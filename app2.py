@@ -325,24 +325,26 @@ if st.session_state.get("otp_verified", False):
 
 
 
-
 import streamlit as st
 from streamlit_option_menu import option_menu
+import random
 
-# --- Assume OTP verification done ---
+# -------------------------
+# --- Game UI (OTP verified only) ---
+# -------------------------
 if st.session_state.get("otp_verified"):
 
     st.header("🎮 Play the Game")
 
     bet = st.number_input("Enter Bet Amount", min_value=1)
     if bet:
-        # --- Styled option menus for guesses ---
+
+        # --- Horizontal styled guesses using option_menu ---
         guess1 = option_menu(
             menu_title="🎯 Select 1st Number",
             options=["1", "2", "3"],
             orientation="horizontal",
             styles={
-                "container": {"padding": "0!important"},
                 "nav-link": {"font-size": "20px", "color": "blue", "font-weight": "bold"},
                 "nav-link-selected": {"background-color": "#d1e7ff"},
             },
@@ -353,7 +355,6 @@ if st.session_state.get("otp_verified"):
             options=["1", "2", "3"],
             orientation="horizontal",
             styles={
-                "container": {"padding": "0!important"},
                 "nav-link": {"font-size": "20px", "color": "blue", "font-weight": "bold"},
                 "nav-link-selected": {"background-color": "#d1e7ff"},
             },
@@ -364,7 +365,6 @@ if st.session_state.get("otp_verified"):
             options=["1", "2", "3"],
             orientation="horizontal",
             styles={
-                "container": {"padding": "0!important"},
                 "nav-link": {"font-size": "20px", "color": "blue", "font-weight": "bold"},
                 "nav-link-selected": {"background-color": "#d1e7ff"},
             },
@@ -373,13 +373,17 @@ if st.session_state.get("otp_verified"):
         # --- Submit button ---
         if st.button("Submit Guess"):
             user_guess = [int(guess1), int(guess2), int(guess3)]
-            result = play_game(email, user_guess, bet)  # Assume function exists
 
-            st.success(f"Answer: {result['answer']}")
-            st.info(f"Correct Guesses: {result['correct']}")
-            st.success(f"Reward Earned: ₹{result['reward']}")
+            # Dummy play_game logic
+            answer = [random.randint(1, 3) for _ in range(3)]
+            correct = sum([user_guess[i] == answer[i] for i in range(3)])
+            reward = bet * correct
 
-        # Optional: Style the Submit button
+            st.success(f"Answer: {answer}")
+            st.info(f"Correct Guesses: {correct}")
+            st.success(f"Reward Earned: ₹{reward}")
+
+        # --- Submit button style ---
         st.markdown("""
         <style>
         div.stButton > button:first-child {
@@ -392,6 +396,8 @@ if st.session_state.get("otp_verified"):
         }
         </style>
         """, unsafe_allow_html=True)
+
+
 
 
 
