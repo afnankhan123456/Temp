@@ -93,11 +93,11 @@ if not st.session_state.otp_verified:
         unsafe_allow_html=True
     )
 
-# --- FUNCTIONS ---
-def get_base64_image(url):
-    """Fetch image from URL and return as base64."""
-    response = requests.get(url)
-    return base64.b64encode(response.content).decode()
+# # --- FUNCTIONS ---
+# def get_base64_image(url):
+#     """Fetch image from URL and return as base64."""
+#     response = requests.get(url)
+#     return base64.b64encode(response.content).decode()
 
 # --- UI ---
 
@@ -361,6 +361,7 @@ if st.session_state.get("otp_verified", False):
             st.success(f"Answer: {result['answer']}")
             st.info(f"Correct Guesses: {result['correct']}")
             st.success(f"Reward Earned: ₹{result['reward']}")
+
 
 
 
