@@ -328,6 +328,17 @@ def play_game(email, user_guess, user_bet):
 
     return result
 
+
+
+# --- Custom CSS for radio buttons size ---
+st.markdown("""
+<style>
+div.row-widget.stRadio > div { 
+    height: 60px;       /* button height */
+    font-size: 30px;    /* text inside button */
+}
+</style>
+""", unsafe_allow_html=True)
 # --- UI ---
 if st.session_state.get("otp_verified"):
 
@@ -357,6 +368,7 @@ if st.session_state.get("otp_verified"):
             st.success(f"Answer: {result['answer']}")
             st.info(f"Correct Guesses: {result['correct']}")
             st.success(f"Reward Earned: ₹{result['reward']}")
+
 
 
 
