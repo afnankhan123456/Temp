@@ -104,29 +104,42 @@ image_url = "https://raw.githubusercontent.com/afnankhan123456/stremlit--game/ma
 # Chhota logo as base64 for inline HTML
 img_base64 = get_base64_image(image_url)
 
+
+
 st.markdown(f"""
     <style>
-        .marquee {{
-            width: 100%;
+        .scroll-text {{
+            width: 400px; /* text container ki fixed width */
             overflow: hidden;
             white-space: nowrap;
             box-sizing: border-box;
-            animation: marquee 8s linear infinite;
         }}
 
-        @keyframes marquee {{
-            0%   {{ transform: translateX(100%); }}
+        .scroll-text h1 {{
+            display: inline-block;
+            padding-left: 100%;
+            animation: scroll-left 10s linear infinite;
+            color: #007BFF;
+            font-family: Arial, sans-serif;
+        }}
+
+        @keyframes scroll-left {{
+            0%   {{ transform: translateX(0%); }}
             100% {{ transform: translateX(-100%); }}
         }}
     </style>
 
     <div style='display: flex; align-items: center; justify-content: center; margin-bottom: 20px;'>
         <img src="data:image/jpeg;base64,{img_base64}" width="100" style="margin-right: 20px; border-radius: 10px;">
-        <h1 class="marquee" style="color: #007BFF; font-family: Arial, sans-serif;">
-            WELCOME TO THE BATTLEZONE ⚔️🔥
-        </h1>
+        <div class="scroll-text">
+            <h1>WELCOME TO THE BATTLEZONE ⚔️🔥</h1>
+        </div>
     </div>
 """, unsafe_allow_html=True)
+
+
+
+
 
 
 # Reward image
