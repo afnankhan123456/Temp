@@ -321,6 +321,28 @@ if st.session_state.get("otp_verified", False):
 
         return result
 
+# --- CSS Styling (page top me) ---
+st.markdown("""
+<style>
+/* Radio labels: blue color and bigger font */
+div[role="radiogroup"] label {
+    color: blue !important;
+    font-size: 20px !important;
+    font-weight: bold !important;
+}
+
+/* Submit button bigger and colored */
+div.stButton > button:first-child {
+    height: 60px;
+    width: 250px;
+    font-size: 22px;
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 10px;
+}
+</style>
+""", unsafe_allow_html=True)
+
 # --- Game UI (sirf OTP verify hone ke baad) ---
 if st.session_state.get("otp_verified"):  # OTP verified ke baad hi
     st.header("🎮 Play the Game")
@@ -338,6 +360,7 @@ if st.session_state.get("otp_verified"):  # OTP verified ke baad hi
             st.success(f"Answer: {result['answer']}")
             st.info(f"Correct Guesses: {result['correct']}")
             st.success(f"Reward Earned: ₹{result['reward']}")
+
 
 
 
