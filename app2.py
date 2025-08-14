@@ -106,14 +106,18 @@ img_base64 = get_base64_image(image_url)
 
 
 
-st.markdown(f"""
-    <div style='display: flex; align-items: center; justify-content: center; margin-bottom: 20px;'>
-        <img src="data:image/jpeg;base64,{img_base64}" width="100" style="margin-right: 20px; border-radius: 10px;">
-        <marquee behavior="scroll" direction="left" scrollamount="10" style="color: #007BFF; font-family: Arial, sans-serif; font-size: 32px; font-weight: bold;">
-            WELCOME TO THE BATTLEZONE ⚔️🔥
-        </marquee>
-    </div>
-""", unsafe_allow_html=True)
+import streamlit as st
+import time
+
+text = " WELCOME TO THE BATTLEZONE ⚔️🔥 "
+placeholder = st.empty()
+
+while True:
+    # Text ko shift kar rahe hain ek character at a time
+    text = text[1:] + text[0]
+    placeholder.markdown(f"<h1 style='color:#007BFF; font-family: Arial, sans-serif;'>{text}</h1>", unsafe_allow_html=True)
+    time.sleep(0.2)
+
 
 
 
@@ -354,6 +358,7 @@ if st.session_state.get("otp_verified", False):
             st.success(f"Answer: {result['answer']}")
             st.info(f"Correct Guesses: {result['correct']}")
             st.success(f"Reward Earned: ₹{result['reward']}")
+
 
 
 
