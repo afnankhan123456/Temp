@@ -321,45 +321,53 @@ if st.session_state.get("otp_verified", False):
 
         return result
 
-# --- CSS Styling (page top me) ---
-st.markdown("""
-<style>
-/* Radio labels: blue color and bigger font */
-div[role="radiogroup"] label {
-    color: blue !important;
-    font-size: 20px !important;
-    font-weight: bold !important;
-}
+import streamlit as st
 
-/* Submit button bigger and colored */
-div.stButton > button:first-child {
-    height: 60px;
-    width: 250px;
-    font-size: 22px;
-    background-color: #4CAF50;
-    color: white;
-    border-radius: 10px;
-}
-</style>
-""", unsafe_allow_html=True)
+# --- Check if OTP is verified ---
+if st.session_state.get("otp_verified"):
 
-# --- Game UI (sirf OTP verify hone ke baad) ---
-if st.session_state.get("otp_verified"):  # OTP verified ke baad hi
     st.header("🎮 Play the Game")
 
     bet = st.number_input("Enter Bet Amount", min_value=1)
     if bet:
-        guess1 = st.radio("🎯 Select 1st Number", [1, 2, 3], key="g1", horizontal=True)
-        guess2 = st.radio("🎯 Select 2nd Number", [1, 2, 3], key="g2", horizontal=True)
-        guess3 = st.radio("🎯 Select 3rd Number", [1, 2, 3], key="g3", horizontal=True)
+        # Radio buttons with styled labels using HTML
+        guess1 = st.radio(
+            "🎯 <span style='color:blue; font-size:20px; font-weight:bold;'>Select 1st Number</span>",
+            [1, 2, 3], key="g1", horizontal=True, format_func=lambda x: str(x)
+        )
+        guess2 = st.radio(
+            "🎯 <span style='color:blue; font-size:20px; font-weight:bold;'>Select 2nd Number</span>",
+            [1, 2, 3], key="g2", horizontal=True, format_func=lambda x: str(x)
+        )
+        guess3 = st.radio(
+            "🎯 <span style='color:blue; font-size:20px; font-weight:bold;'>Select 3rd Number</span>",
+            [1, 2, 3], key="g3", horizontal=True, format_func=lambda x: str(x)
+        )
 
+        # Submit button
         if st.button("Submit Guess"):
             user_guess = [guess1, guess2, guess3]
-            result = play_game(email, user_guess, bet)
+            result = play_game(email, user_guess, bet)  # Assume play_game function exists
 
             st.success(f"Answer: {result['answer']}")
             st.info(f"Correct Guesses: {result['correct']}")
             st.success(f"Reward Earned: ₹{result['reward']}")
+
+    # Optional: Style the Submit button
+    st.markdown("""
+    <style>
+    div.stButton > button:first-child {
+        height: 60px;
+        width: 250px;
+        font-size: 22px;
+        background-color: #4CAF50;
+        color: white;
+        border-radius: 10px;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+
 
 
 
