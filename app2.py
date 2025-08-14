@@ -330,16 +330,6 @@ def play_game(email, user_guess, user_bet):
 
 
 
-# --- Custom CSS for radio buttons circle size ---
-st.markdown("""
-<style>
-div.stRadio > div > label > div > input[type="radio"] {
-    width: 30px !important;    
-    height: 30px !important;   
-}
-</style>
-""", unsafe_allow_html=True)
-
 # --- UI ---
 if st.session_state.get("otp_verified"):
 
@@ -349,22 +339,40 @@ if st.session_state.get("otp_verified"):
 
     if bet > 0:
 
+        # 1st Number
         st.markdown('<span style="color:blue; font-size:40px;">🎯 Select 1st Number</span>', unsafe_allow_html=True)
-        guess1 = st.radio("", [1, 2, 3], key="g1", horizontal=True)
+        cols1 = st.columns(3)
+        guess1 = None
+        for i, col in enumerate(cols1, start=1):
+            if col.button(str(i), key=f"btn1_{i}"):
+                guess1 = i
 
+        # 2nd Number
         st.markdown('<span style="color:blue; font-size:40px;">🎯 Select 2nd Number</span>', unsafe_allow_html=True)
-        guess2 = st.radio("", [1, 2, 3], key="g2", horizontal=True)
+        cols2 = st.columns(3)
+        guess2 = None
+        for i, col in enumerate(cols2, start=1):
+            if col.button(str(i), key=f"btn2_{i}"):
+                guess2 = i
 
+        # 3rd Number
         st.markdown('<span style="color:blue; font-size:40px;">🎯 Select 3rd Number</span>', unsafe_allow_html=True)
-        guess3 = st.radio("", [1, 2, 3], key="g3", horizontal=True)
+        cols3 = st.columns(3)
+        guess3 = None
+        for i, col in enumerate(cols3, start=1):
+            if col.button(str(i), key=f"btn3_{i}"):
+                guess3 = i
 
+        # Submit guess
         if st.button("Submit Guess", key="submit_guess"):
-            user_guess = [guess1, guess2, guess3]
+            # Agar koi select nahi kiya to default 1
+            user_guess = [guess1 or 1, guess2 or 1, guess3 or 1]
             result = play_game(st.session_state.get("email", "guest"), user_guess, bet)
 
             st.success(f"Answer: {result['answer']}")
             st.info(f"Correct Guesses: {result['correct']}")
             st.success(f"Reward Earned: ₹{result['reward']}")
+
 
 
 
