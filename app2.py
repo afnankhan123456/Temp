@@ -325,33 +325,34 @@ if st.session_state.get("otp_verified", False):
 
    bet = st.number_input("Enter Bet Amount", min_value=1)
 
-if bet:
-    # Guesses
-    guess1 = st.radio("🎯 Select 1st Number", [1, 2, 3], key="g1", horizontal=True)
-    guess2 = st.radio("🎯 Select 2nd Number", [1, 2, 3], key="g2", horizontal=True)
-    guess3 = st.radio("🎯 Select 3rd Number", [1, 2, 3], key="g3", horizontal=True)
+   if bet:
+       # Guesses
+       guess1 = st.radio("🎯 Select 1st Number", [1, 2, 3], key="g1", horizontal=True)
+       guess2 = st.radio("🎯 Select 2nd Number", [1, 2, 3], key="g2", horizontal=True)
+       guess3 = st.radio("🎯 Select 3rd Number", [1, 2, 3], key="g3", horizontal=True)
+       
+       if st.button("Submit Guess", key="submit_guess"):
+           user_guess = [guess1, guess2, guess3]
+           result = play_game(email, user_guess, bet)
+   
+           st.success(f"Answer: {result['answer']}")
+           st.info(f"Correct Guesses: {result['correct']}")
+           st.success(f"Reward Earned: ₹{result['reward']}")
+   
+   # CSS to make radio buttons bigger
+   st.markdown("""
+   <style>
+   div[role="radiogroup"] label {
+       font-size: 24px;      /* Text size */
+       padding: 10px 20px;   /* Button padding */
+       background-color: #e0e0e0;
+       border-radius: 10px;
+       margin-right: 10px;
+   }
+   div[role="radiogroup"] input {
+       width: 25px;   /* Circle size */
+       height: 25px;
+   }
+   </style>
+   """, unsafe_allow_html=True)
 
-    if st.button("Submit Guess", key="submit_guess"):
-        user_guess = [guess1, guess2, guess3]
-        result = play_game(email, user_guess, bet)
-
-        st.success(f"Answer: {result['answer']}")
-        st.info(f"Correct Guesses: {result['correct']}")
-        st.success(f"Reward Earned: ₹{result['reward']}")
-
-# CSS to make radio buttons bigger
-st.markdown("""
-<style>
-div[role="radiogroup"] label {
-    font-size: 24px;      /* Text size */
-    padding: 10px 20px;   /* Button padding */
-    background-color: #e0e0e0;
-    border-radius: 10px;
-    margin-right: 10px;
-}
-div[role="radiogroup"] input {
-    width: 25px;   /* Circle size */
-    height: 25px;
-}
-</style>
-""", unsafe_allow_html=True)
