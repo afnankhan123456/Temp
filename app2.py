@@ -329,6 +329,8 @@ def play_game(email, user_guess, user_bet):
     return result
 
 
+
+
 import streamlit as st
 
 # --- User Data Storage ---
@@ -369,10 +371,10 @@ def horizontal_buttons(label, key):
         btn.addEventListener("click", (e) => {{
             fetch("/_stcore/set_session_state", {{
                 method: "POST",
-                body: JSON.stringify({{"{key}": parseInt(btn.innerText)}}),
-                headers: {{"Content-Type": "application/json"}}
+                body: JSON.stringify({{{{ "{key}": parseInt(btn.innerText) }}}}),
+                headers: {{ "Content-Type": "application/json" }}
             }});
-        }}});
+        }});
     }});
     </script>
     """
