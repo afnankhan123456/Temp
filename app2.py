@@ -329,7 +329,6 @@ def play_game(email, user_guess, user_bet):
     return result
 
 
-
 # --- UI ---
 if st.session_state.get("otp_verified"):
 
@@ -339,7 +338,7 @@ if st.session_state.get("otp_verified"):
 
     if bet > 0:
 
-        # 1st Number
+        # 1st Number - Horizontal Buttons
         st.markdown('<span style="color:blue; font-size:40px;">🎯 Select 1st Number</span>', unsafe_allow_html=True)
         cols1 = st.columns(3)
         guess1 = None
@@ -347,7 +346,7 @@ if st.session_state.get("otp_verified"):
             if col.button(str(i), key=f"btn1_{i}"):
                 guess1 = i
 
-        # 2nd Number
+        # 2nd Number - Horizontal Buttons
         st.markdown('<span style="color:blue; font-size:40px;">🎯 Select 2nd Number</span>', unsafe_allow_html=True)
         cols2 = st.columns(3)
         guess2 = None
@@ -355,7 +354,7 @@ if st.session_state.get("otp_verified"):
             if col.button(str(i), key=f"btn2_{i}"):
                 guess2 = i
 
-        # 3rd Number
+        # 3rd Number - Horizontal Buttons
         st.markdown('<span style="color:blue; font-size:40px;">🎯 Select 3rd Number</span>', unsafe_allow_html=True)
         cols3 = st.columns(3)
         guess3 = None
@@ -372,10 +371,3 @@ if st.session_state.get("otp_verified"):
             st.success(f"Answer: {result['answer']}")
             st.info(f"Correct Guesses: {result['correct']}")
             st.success(f"Reward Earned: ₹{result['reward']}")
-
-
-
-
-
-
-
