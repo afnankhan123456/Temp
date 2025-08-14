@@ -329,9 +329,6 @@ def play_game(email, user_guess, user_bet):
     return result
 
 
-
-
-
 import streamlit as st
 
 # --- User Data Storage ---
@@ -348,26 +345,13 @@ def play_game(email, user_guess, user_bet):
         "reward": user_bet * 2
     }
 
-# --- Horizontal buttons helper ---
+# --- Horizontal buttons using st.radio (instant highlight on click) ---
 def horizontal_buttons(label, key):
     st.markdown(f'<span style="color:blue; font-size:40px;">{label}</span>', unsafe_allow_html=True)
-    
-    # Initialize selected value
-    if key not in st.session_state:
-        st.session_state[key] = 1  # default
-    
-    cols = st.columns(3)
-    for i, col in enumerate(cols, start=1):
-        if st.session_state[key] == i:
-            # Selected button: blue background
-            if col.button(str(i), key=f"{key}_{i}"):
-                st.session_state[key] = i
-        else:
-            # Unselected button: white background
-            if col.button(str(i), key=f"{key}_{i}"):
-                st.session_state[key] = i
-
-    return st.session_state[key]
+    options = [1, 2, 3]
+    # st.radio horizontal + selected button highlighted automatically
+    selected = st.radio("", options, key=key, horizontal=True)
+    return selected
 
 # --- UI ---
 if st.session_state.get("otp_verified"):
