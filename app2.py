@@ -15,7 +15,6 @@ IMAGE_URL_BG = "https://raw.githubusercontent.com/afnankhan123456/stremlit--game
 SENDER_EMAIL = "afnank6789@gmail.com"
 APP_PASSWORD = "uiqb avim axhz knzu"
 
-
 # --- FUNCTIONS ---
 def get_base64_image(image_source):
     """Convert local file or URL to base64 string."""
@@ -70,22 +69,29 @@ if "user_email" not in st.session_state:
 if "sent_otp" not in st.session_state:
     st.session_state.sent_otp = ""
 
-# # --- BACKGROUND SETUP BEFORE OTP ---
-# if not st.session_state.otp_verified:
-#     base64_image = get_base64_image(IMAGE_URL_BG)
-#     st.markdown(
-#         f"""
-#         <style>
-#         .stApp {{
-#             background-image: url("data:image/jpeg;base64,{base64_image}");
-#             background-size: cover;
-#             background-repeat: no-repeat;
-#             background-attachment: fixed;
-#         }}
-#         </style>
-#         """,
-#         unsafe_allow_html=True
-#     )
+# --- BACKGROUND SETUP BEFORE OTP ---
+if not st.session_state.otp_verified:
+    base64_image = get_base64_image(IMAGE_URL_BG)
+    st.markdown(
+        f"""
+        <style>
+        .stApp {{
+            background-image: url("data:image/jpeg;base64,{base64_image}");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+        }}
+
+        /* Responsive for mobile */
+        @media (max-width: 600px) {{
+            .stApp {{
+                background-size: contain;
+            }}
+        }}
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
 
 # --- FUNCTIONS ---
 def get_base64_image(url):
@@ -355,6 +361,7 @@ if st.session_state.get("otp_verified", False):
             st.success(f"Answer: {result['answer']}")
             st.info(f"Correct Guesses: {result['correct']}")
             st.success(f"Reward Earned: ₹{result['reward']}")
+
 
 
 
