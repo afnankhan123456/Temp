@@ -323,36 +323,49 @@ if st.session_state.get("otp_verified", False):
     # --- UI Inputs ---
     st.header("🎮 Play the Game")
 
-   bet = st.number_input("Enter Bet Amount", min_value=1)
+   import streamlit as st
 
-   if bet:
-       # Guesses
-       guess1 = st.radio("🎯 Select 1st Number", [1, 2, 3], key="g1", horizontal=True)
-       guess2 = st.radio("🎯 Select 2nd Number", [1, 2, 3], key="g2", horizontal=True)
-       guess3 = st.radio("🎯 Select 3rd Number", [1, 2, 3], key="g3", horizontal=True)
-       
-       if st.button("Submit Guess", key="submit_guess"):
-           user_guess = [guess1, guess2, guess3]
-           result = play_game(email, user_guess, bet)
-   
-           st.success(f"Answer: {result['answer']}")
-           st.info(f"Correct Guesses: {result['correct']}")
-           st.success(f"Reward Earned: ₹{result['reward']}")
-   
-   # CSS to make radio buttons bigger
-   st.markdown("""
-   <style>
-   div[role="radiogroup"] label {
-       font-size: 24px;      /* Text size */
-       padding: 10px 20px;   /* Button padding */
-       background-color: #e0e0e0;
-       border-radius: 10px;
-       margin-right: 10px;
-   }
-   div[role="radiogroup"] input {
-       width: 25px;   /* Circle size */
-       height: 25px;
-   }
-   </style>
-   """, unsafe_allow_html=True)
+bet = st.number_input("Enter Bet Amount", min_value=1)
 
+if bet:
+    st.write("🎯 Select your guesses:")
+
+    # Use columns to place buttons horizontally
+    cols1 = st.columns(3)
+    cols2 = st.columns(3)
+    cols3 = st.columns(3)
+
+    # Store guesses in session_state
+    if "guess1" not in st.session_state:
+        st.session_state.guess1 = None
+    if "guess2" not in st.session_state:
+        st.session_state.guess2 = None
+    if "guess3" not in st.session_state:
+        st.session_state.guess3 = None
+
+    # First guess buttons
+    for i, col in enumerate(cols1, start=1):
+        if col.button(f"{i}", key=f"g1_{i}"):
+            st.session_state.guess1 = i
+
+    # Second guess buttons
+    for i, col in enumerate(cols2, start=1):
+        if col.button(f"{i}", key=f"g2_{i}"):
+            st.session_state.guess2 = i
+
+    # Third guess buttons
+    for i, col in enumerate(cols3, start=1):
+        if col.button(f"{i}", key=f"g3_{i}"):
+            st.session_state.guess3 = i
+
+    # Submit button
+    if st.button("Submit Guess"):
+        if st.session_state.guess1 and st.session_state.guess2 and st.session_state.guess3:
+            user_guess = [st.session_state.guess1, st.session_state.guess2, st.session_state.guess3]
+            result = play_game(email, user_guess, bet)
+
+            st.success(f"Answer: {result['answer']}")
+            st.info(f"Correct Guesses: {result['correct']}")
+            st.success(f"Reward Earned: ₹{result['reward']}")
+        else:
+            st.warning("Please select all three guesses!")
