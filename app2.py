@@ -321,51 +321,79 @@ if st.session_state.get("otp_verified", False):
 
         return result
 
-import streamlit as st
 
-# --- Check if OTP is verified ---
+
+
+
+
+import streamlit as st
+from streamlit_option_menu import option_menu
+
+# --- Assume OTP verification done ---
 if st.session_state.get("otp_verified"):
 
     st.header("🎮 Play the Game")
 
     bet = st.number_input("Enter Bet Amount", min_value=1)
     if bet:
-        # Radio buttons with styled labels using HTML
-        guess1 = st.radio(
-            "🎯 <span style='color:blue; font-size:20px; font-weight:bold;'>Select 1st Number</span>",
-            [1, 2, 3], key="g1", horizontal=True, format_func=lambda x: str(x)
-        )
-        guess2 = st.radio(
-            "🎯 <span style='color:blue; font-size:20px; font-weight:bold;'>Select 2nd Number</span>",
-            [1, 2, 3], key="g2", horizontal=True, format_func=lambda x: str(x)
-        )
-        guess3 = st.radio(
-            "🎯 <span style='color:blue; font-size:20px; font-weight:bold;'>Select 3rd Number</span>",
-            [1, 2, 3], key="g3", horizontal=True, format_func=lambda x: str(x)
+        # --- Styled option menus for guesses ---
+        guess1 = option_menu(
+            menu_title="🎯 Select 1st Number",
+            options=["1", "2", "3"],
+            orientation="horizontal",
+            styles={
+                "container": {"padding": "0!important"},
+                "nav-link": {"font-size": "20px", "color": "blue", "font-weight": "bold"},
+                "nav-link-selected": {"background-color": "#d1e7ff"},
+            },
         )
 
-        # Submit button
+        guess2 = option_menu(
+            menu_title="🎯 Select 2nd Number",
+            options=["1", "2", "3"],
+            orientation="horizontal",
+            styles={
+                "container": {"padding": "0!important"},
+                "nav-link": {"font-size": "20px", "color": "blue", "font-weight": "bold"},
+                "nav-link-selected": {"background-color": "#d1e7ff"},
+            },
+        )
+
+        guess3 = option_menu(
+            menu_title="🎯 Select 3rd Number",
+            options=["1", "2", "3"],
+            orientation="horizontal",
+            styles={
+                "container": {"padding": "0!important"},
+                "nav-link": {"font-size": "20px", "color": "blue", "font-weight": "bold"},
+                "nav-link-selected": {"background-color": "#d1e7ff"},
+            },
+        )
+
+        # --- Submit button ---
         if st.button("Submit Guess"):
-            user_guess = [guess1, guess2, guess3]
-            result = play_game(email, user_guess, bet)  # Assume play_game function exists
+            user_guess = [int(guess1), int(guess2), int(guess3)]
+            result = play_game(email, user_guess, bet)  # Assume function exists
 
             st.success(f"Answer: {result['answer']}")
             st.info(f"Correct Guesses: {result['correct']}")
             st.success(f"Reward Earned: ₹{result['reward']}")
 
-    # Optional: Style the Submit button
-    st.markdown("""
-    <style>
-    div.stButton > button:first-child {
-        height: 60px;
-        width: 250px;
-        font-size: 22px;
-        background-color: #4CAF50;
-        color: white;
-        border-radius: 10px;
-    }
-    </style>
-    """, unsafe_allow_html=True)
+        # Optional: Style the Submit button
+        st.markdown("""
+        <style>
+        div.stButton > button:first-child {
+            height: 60px;
+            width: 250px;
+            font-size: 22px;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 10px;
+        }
+        </style>
+        """, unsafe_allow_html=True)
+
+
 
 
 
