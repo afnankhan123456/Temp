@@ -345,12 +345,10 @@ def play_game(email, user_guess, user_bet):
         "reward": user_bet * 2
     }
 
-# --- Horizontal buttons using st.radio (instant highlight on click) ---
+# --- Horizontal buttons with highlight using st.radio ---
 def horizontal_buttons(label, key):
     st.markdown(f'<span style="color:blue; font-size:40px;">{label}</span>', unsafe_allow_html=True)
-    options = [1, 2, 3]
-    # st.radio horizontal + selected button highlighted automatically
-    selected = st.radio("", options, key=key, horizontal=True)
+    selected = st.radio("", [1, 2, 3], key=key, horizontal=True)
     return selected
 
 # --- UI ---
