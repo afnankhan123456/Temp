@@ -107,36 +107,11 @@ img_base64 = get_base64_image(image_url)
 
 
 st.markdown(f"""
-    <style>
-        .scroll-container {{
-            width: 500px; /* marquee ka visible area */
-            overflow: hidden;
-            white-space: nowrap;
-            box-sizing: border-box;
-            border: none;
-        }}
-
-        .scroll-text {{
-            display: inline-block;
-            padding-left: 100%; /* shuru me text screen ke bahar ho */
-            animation: scroll-left 10s linear infinite;
-            color: #007BFF;
-            font-family: Arial, sans-serif;
-            font-size: 32px;
-            font-weight: bold;
-        }}
-
-        @keyframes scroll-left {{
-            0%   {{ transform: translateX(0%); }}
-            100% {{ transform: translateX(-100%); }}
-        }}
-    </style>
-
     <div style='display: flex; align-items: center; justify-content: center; margin-bottom: 20px;'>
         <img src="data:image/jpeg;base64,{img_base64}" width="100" style="margin-right: 20px; border-radius: 10px;">
-        <div class="scroll-container">
-            <div class="scroll-text">WELCOME TO THE BATTLEZONE ⚔️🔥</div>
-        </div>
+        <marquee behavior="scroll" direction="left" scrollamount="10" style="color: #007BFF; font-family: Arial, sans-serif; font-size: 32px; font-weight: bold;">
+            WELCOME TO THE BATTLEZONE ⚔️🔥
+        </marquee>
     </div>
 """, unsafe_allow_html=True)
 
@@ -379,6 +354,7 @@ if st.session_state.get("otp_verified", False):
             st.success(f"Answer: {result['answer']}")
             st.info(f"Correct Guesses: {result['correct']}")
             st.success(f"Reward Earned: ₹{result['reward']}")
+
 
 
 
