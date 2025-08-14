@@ -330,27 +330,25 @@ def play_game(email, user_guess, user_bet):
 
 
 
-# --- Custom CSS for radio buttons size ---
+# --- Custom CSS for radio buttons circle size ---
 st.markdown("""
 <style>
-div.row-widget.stRadio > div { 
-    height: 60px;       /* button height */
-    font-size: 30px;    /* text inside button */
+div.stRadio > div > label > div > input[type="radio"] {
+    width: 30px !important;    
+    height: 30px !important;   
 }
 </style>
 """, unsafe_allow_html=True)
+
 # --- UI ---
 if st.session_state.get("otp_verified"):
 
     st.header("🎮 Play the Game")
 
-    # Bet input
     bet = st.number_input("Enter Bet Amount", min_value=1, key="bet_input")
 
-    # Proceed only if bet entered
     if bet > 0:
 
-        # Styled labels for radio buttons
         st.markdown('<span style="color:blue; font-size:40px;">🎯 Select 1st Number</span>', unsafe_allow_html=True)
         guess1 = st.radio("", [1, 2, 3], key="g1", horizontal=True)
 
@@ -360,7 +358,6 @@ if st.session_state.get("otp_verified"):
         st.markdown('<span style="color:blue; font-size:40px;">🎯 Select 3rd Number</span>', unsafe_allow_html=True)
         guess3 = st.radio("", [1, 2, 3], key="g3", horizontal=True)
 
-        # Submit guess
         if st.button("Submit Guess", key="submit_guess"):
             user_guess = [guess1, guess2, guess3]
             result = play_game(st.session_state.get("email", "guest"), user_guess, bet)
@@ -368,6 +365,8 @@ if st.session_state.get("otp_verified"):
             st.success(f"Answer: {result['answer']}")
             st.info(f"Correct Guesses: {result['correct']}")
             st.success(f"Reward Earned: ₹{result['reward']}")
+
+
 
 
 
