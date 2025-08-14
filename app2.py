@@ -328,22 +328,39 @@ def play_game(email, user_guess, user_bet):
 
     return result
 
+import streamlit as st
+
+# --- Dummy play_game function (replace with actual) ---
+def play_game(email, user_guess, user_bet):
+    return {
+        "answer": [1, 2, 3],
+        "correct": sum([user_guess[i] == [1, 2, 3][i] for i in range(3)]),
+        "reward": user_bet * 2
+    }
+
+# --- Horizontal button selection helper ---
+def horizontal_buttons(label, key):
+    if label:
+        st.markdown(f'<span style="color:blue; font-size:40px;">{label}</span>', unsafe_allow_html=True)
+    cols = st.columns(3)
+    selected = st.session_state.get(key, None)
+    for i, col in enumerate(cols, start=1):
+        if col.button(str(i), key=f"{key}_{i}"):
+            st.session_state[key] = i
+            selected = i
+    return st.session_state.get(key, 1)
+
 # --- UI ---
-if st.session_state.get("otp_verified"):
+if st.session_state.get("otp_verified", True):  # True just for testing
 
     st.header("🎮 Play the Game")
 
     bet = st.number_input("Enter Bet Amount", min_value=1, key="bet_input")
 
     if bet > 0:
-        st.markdown('<span style="color:blue; font-size:40px;">🎯 Select 1st Number</span>', unsafe_allow_html=True)
-        guess1 = horizontal_buttons("", "guess1")
-
-        st.markdown('<span style="color:blue; font-size:40px;">🎯 Select 2nd Number</span>', unsafe_allow_html=True)
-        guess2 = horizontal_buttons("", "guess2")
-
-        st.markdown('<span style="color:blue; font-size:40px;">🎯 Select 3rd Number</span>', unsafe_allow_html=True)
-        guess3 = horizontal_buttons("", "guess3")
+        guess1 = horizontal_buttons("🎯 Select 1st Number", "guess1")
+        guess2 = horizontal_buttons("🎯 Select 2nd Number", "guess2")
+        guess3 = horizontal_buttons("🎯 Select 3rd Number", "guess3")
 
         if st.button("Submit Guess", key="submit_guess"):
             user_guess = [guess1, guess2, guess3]
@@ -352,6 +369,8 @@ if st.session_state.get("otp_verified"):
             st.success(f"Answer: {result['answer']}")
             st.info(f"Correct Guesses: {result['correct']}")
             st.success(f"Reward Earned: ₹{result['reward']}")
+
+
 
 
 
