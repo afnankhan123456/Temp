@@ -341,19 +341,35 @@ def play_game(email, user_guess, user_bet):
 
 # --- Horizontal radio with big buttons ---
 def horizontal_radio(label, key):
+    st.markdown(f"""
+        <style>
+        div[role='radiogroup'] label {{
+            background-color: white;
+            color: black;
+            border: 2px solid #1f77b4;
+            border-radius: 10px;
+            padding: 10px 20px;
+            margin-right: 10px;
+            font-size: 24px;
+            cursor: pointer;
+        }}
+        div[role='radiogroup'] label:hover {{
+            background-color: #e6f2ff;
+        }}
+        div[role='radiogroup'] input:checked + div {{
+            background-color: #1f77b4 !important;
+            color: white !important;
+        }}
+        </style>
+    """, unsafe_allow_html=True)
+
     st.markdown(f'<span style="color:blue; font-size:40px;">{label}</span>', unsafe_allow_html=True)
-    choice = st.radio(
-        "",
-        [1, 2, 3],
-        index=0,
-        horizontal=True,
-        key=key
-    )
-    return choice
+
+    # Radio automatically stores value in session_state when key is given
+    return st.radio("", [1, 2, 3], index=0, horizontal=True, key=key)
 
 # --- UI ---
 if st.session_state.get("otp_verified"):
-
     st.header("🎮 Play the Game")
     bet = st.number_input("Enter Bet Amount", min_value=1, key="bet_input")
 
@@ -365,12 +381,6 @@ if st.session_state.get("otp_verified"):
         if st.button("Submit Guess"):
             user_guess = [guess1, guess2, guess3]
             result = play_game(st.session_state.get("email", "guest"), user_guess, bet)
-
             st.success(f"Answer: {result['answer']}")
             st.info(f"Correct Guesses: {result['correct']}")
             st.success(f"Reward Earned: ₹{result['reward']}")
-
-            st.success(f"Answer: {result['answer']}")
-            st.info(f"Correct Guesses: {result['correct']}")
-            st.success(f"Reward Earned: ₹{result['reward']}")
-
