@@ -329,6 +329,9 @@ def play_game(email, user_guess, user_bet):
     return result
 
 
+
+
+
 import streamlit as st
 
 # --- User Data Storage ---
@@ -345,39 +348,25 @@ def play_game(email, user_guess, user_bet):
         "reward": user_bet * 2
     }
 
-# --- Horizontal buttons with highlight ---
+# --- Horizontal buttons helper ---
 def horizontal_buttons(label, key):
     st.markdown(f'<span style="color:blue; font-size:40px;">{label}</span>', unsafe_allow_html=True)
     
+    # Initialize selected value
     if key not in st.session_state:
-        st.session_state[key] = 1  # default selection
+        st.session_state[key] = 1  # default
     
-    buttons_html = ""
-    for i in range(1, 4):
+    cols = st.columns(3)
+    for i, col in enumerate(cols, start=1):
         if st.session_state[key] == i:
-            buttons_html += f'<button onclick="document.dispatchEvent(new CustomEvent(\'button_click\', {{detail:{i}}}))" style="background-color:#1f77b4; color:white; font-size:24px; height:60px; width:60px; margin-right:10px; border-radius:10px;">{i}</button>'
+            # Selected button: blue background
+            if col.button(str(i), key=f"{key}_{i}"):
+                st.session_state[key] = i
         else:
-            buttons_html += f'<button onclick="document.dispatchEvent(new CustomEvent(\'button_click\', {{detail:{i}}}))" style="background-color:white; color:black; font-size:24px; height:60px; width:60px; margin-right:10px; border-radius:10px;">{i}</button>'
-    
-    st.markdown(f'<div style="display:flex; flex-wrap:wrap;">{buttons_html}</div>', unsafe_allow_html=True)
-    
-    # JavaScript event listener to update session state
-    js = f"""
-    <script>
-    const buttons = document.querySelectorAll("button");
-    buttons.forEach(btn => {{
-        btn.addEventListener("click", (e) => {{
-            fetch("/_stcore/set_session_state", {{
-                method: "POST",
-                body: JSON.stringify({{"{key}": parseInt(btn.innerText)}}),
-                headers: {{"Content-Type": "application/json"}}
-            }});
-        }});
-    }});
-    </script>
-    """
-    st.components.v1.html(js, height=0)
-    
+            # Unselected button: white background
+            if col.button(str(i), key=f"{key}_{i}"):
+                st.session_state[key] = i
+
     return st.session_state[key]
 
 # --- UI ---
